@@ -1,5 +1,7 @@
 // Code for INFORMATION VISUALIZATION TECHNOLOGY
 // written by Tiankai Hang (tkhang@seu.edu.cn)
+// some code was borrowed from https://learnopengl-cn.github.io/01%20Getting%20started/04%20Hello%20Triangle/
+// 2020/10/06
 
 // function: Draw Cylinder based on GLFW and GLAD
 
