@@ -23,6 +23,8 @@ using namespace std;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
+const int SCREEN_WIDTH  = 800;
+const int SCREEN_HEIGHT = 800;
 
 
 // ============================================================
@@ -50,7 +52,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Draw Cylinder", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Draw Cylinder", NULL, NULL);
     if (window == NULL) {
         cout << "Fail to create the window." << endl;
         glfwTerminate();
@@ -125,7 +127,7 @@ int main()
     vector<int> CylinderIndices;
 
     const float RADIUS = 0.4;
-    const int INTERVALS = 50;
+    const int INTERVALS = 500;
     const float ANGLE_INTERVAL = 2.0 * PI / INTERVALS;
     int index_point = 0;
     for (int i = 0; i <= INTERVALS; ++i) {
@@ -135,20 +137,22 @@ int main()
             float x = RADIUS * cos(alpha) * cos(theta);
             float y = RADIUS * cos(alpha) * sin(theta);
             float z = RADIUS * sin(alpha);
-            cout << x << " " << y << " " << z << endl;
+            //cout << x << " " << y << " " << z << endl;
 
             CylinderVertices.push_back(x);
             CylinderVertices.push_back(y);
             CylinderVertices.push_back(z);
 
-            CylinderIndices.push_back(index_point++);
+            //CylinderIndices.push_back(index_point++);
             //cout << index_point;
-            /*CylinderIndices.push_back(i * (INTERVALS + 1) + j);
-            CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j);
-            CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
-            CylinderIndices.push_back(i * (INTERVALS + 1) + j);
-            CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
-            CylinderIndices.push_back(i * (INTERVALS + 1) + j + 1);*/
+            if (i != INTERVALS && j != INTERVALS) {
+                CylinderIndices.push_back(i * (INTERVALS + 1) + j);
+                CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j);
+                CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+                CylinderIndices.push_back(i * (INTERVALS + 1) + j);
+                CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+                CylinderIndices.push_back(i * (INTERVALS + 1) + j + 1);
+            }
         }
     }
 
@@ -163,7 +167,7 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, CylinderVertices.size() * sizeof(float), &CylinderVertices[0], GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ARRAY_BUFFER, CylinderIndices.size() * sizeof(int), &CylinderIndices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, CylinderIndices.size() * sizeof(int), &CylinderIndices[0], GL_STATIC_DRAW);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -180,8 +184,11 @@ int main()
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
 
+        //glEnable(GL_CULL_FACE);
+        //glCullFace(GL_BACK);
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDrawElements(GL_TRIANGLES, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, INTERVALS * INTERVALS * 6, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
