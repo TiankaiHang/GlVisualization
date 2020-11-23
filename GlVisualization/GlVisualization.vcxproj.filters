@@ -20,4 +20,9 @@
     </ClCompile>
     <ClCompile Include="glad.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stb_image_write.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

@@ -14,6 +14,9 @@
 #include <string>
 #include <cmath>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #define PI 3.14159265358979323846
 
 using namespace std;
@@ -22,6 +25,7 @@ using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+void saveImage(char* filepath, GLFWwindow* w);
 
 const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 800;
@@ -126,8 +130,8 @@ int main()
     vector<float> CylinderVertices;
     vector<int> CylinderIndices;
 
-    const float RADIUS = 0.4;
-    const int INTERVALS = 500;
+    const float RADIUS = 0.8;
+    const int INTERVALS = 50;
     const float ANGLE_INTERVAL = 2.0 * PI / INTERVALS;
     int index_point = 0;
     for (int i = 0; i <= INTERVALS; ++i) {
@@ -178,21 +182,24 @@ int main()
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
 
-        //glEnable(GL_CULL_FACE);
-        //glCullFace(GL_BACK);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, INTERVALS * INTERVALS * 6, GL_UNSIGNED_INT, 0);
         //glDrawElements(GL_TRIANGLES, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    string savepath = "figs/ball2.png";
+    saveImage((char*)savepath.c_str(), window);
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -213,4 +220,20 @@ void processInput(GLFWwindow* window) {
     // esc to exit
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+}
+
+
+void saveImage(char* filepath, GLFWwindow* w) {
+    int width, height;
+    glfwGetFramebufferSize(w, &width, &height);
+    GLsizei nrChannels = 3;
+    GLsizei stride = nrChannels * width;
+    stride += (stride % 4) ? (4 - stride % 4) : 0;
+    GLsizei bufferSize = stride * height;
+    std::vector<char> buffer(bufferSize);
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
+    stbi_flip_vertically_on_write(true);
+    stbi_write_png(filepath, width, height, nrChannels, buffer.data(), stride);
 }
