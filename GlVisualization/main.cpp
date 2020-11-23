@@ -224,6 +224,7 @@ void processInput(GLFWwindow* window) {
 
 
 void saveImage(char* filepath, GLFWwindow* w) {
+    //ref: https://lencerf.github.io/post/2019-09-21-save-the-opengl-rendering-to-image-file/
     int width, height;
     glfwGetFramebufferSize(w, &width, &height);
     GLsizei nrChannels = 3;
