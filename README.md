@@ -8,3 +8,6 @@ GLAD: https://glad.dav1d.de/
 
 ## Draw the Cylinder
 
+Some demo
+
+![ball.png](https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball.png?raw=true)
