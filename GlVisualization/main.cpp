@@ -1,7 +1,16 @@
+// Code for INFORMATION VISUALIZATION TECHNOLOGY
+// written by Tiankai Hang (tkhang@seu.edu.cn)
+
+// function: Draw Cylinder based on GLFW and GLAD
+
 // #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <map>
+#include <string>
+
+#define PI 3.14159265358979323846
 
 using namespace std;
 
@@ -9,6 +18,25 @@ using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+
+
+
+// ============================================================
+//                           GLSL
+// ============================================================
+const char* vertexShaderSource = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0";
+const char* fragmentShaderSource = "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\n\0";
+// ============================================================
 
 int main()
 {
@@ -34,14 +62,40 @@ int main()
         return -1;
     }
 
+    //vertex shader
+    int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    //fragment shader
+    int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
         0.0f,  0.5f, 0.0f
     };
 
-    unsigned int VBO;
+    int shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    unsigned int VAO, VBO, EBO;
+    glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, EBO);
+
+
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
