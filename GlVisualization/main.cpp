@@ -50,7 +50,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "GL Program", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Draw Cylinder", NULL, NULL);
     if (window == NULL) {
         cout << "Fail to create the window." << endl;
         glfwTerminate();
@@ -84,7 +84,7 @@ int main()
     int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(fragmentShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
@@ -96,11 +96,26 @@ int main()
     //    0.5f, -0.5f, 0.0f,
     //    0.0f,  0.5f, 0.0f
     //};
+    float vertices[] = {
+         0.5f,  0.5f, 0.0f,  // top right
+         0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f   // top left 
+    };
+    unsigned int indices[] = {  // note that we start from 0!
+        0, 1, 3,  // first Triangle
+        1, 2, 3   // second Triangle
+    };
 
     int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -109,8 +124,8 @@ int main()
     vector<float> CylinderVertices;
     vector<int> CylinderIndices;
 
-    const int RADIUS = 0.4;
-    const int INTERVALS = 1000;
+    const float RADIUS = 0.4;
+    const int INTERVALS = 50;
     const float ANGLE_INTERVAL = 2.0 * PI / INTERVALS;
     int index_point = 0;
     for (int i = 0; i <= INTERVALS; ++i) {
@@ -120,12 +135,20 @@ int main()
             float x = RADIUS * cos(alpha) * cos(theta);
             float y = RADIUS * cos(alpha) * sin(theta);
             float z = RADIUS * sin(alpha);
+            cout << x << " " << y << " " << z << endl;
 
             CylinderVertices.push_back(x);
             CylinderVertices.push_back(y);
             CylinderVertices.push_back(z);
 
             CylinderIndices.push_back(index_point++);
+            //cout << index_point;
+            /*CylinderIndices.push_back(i * (INTERVALS + 1) + j);
+            CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j);
+            CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+            CylinderIndices.push_back(i * (INTERVALS + 1) + j);
+            CylinderIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+            CylinderIndices.push_back(i * (INTERVALS + 1) + j + 1);*/
         }
     }
 
@@ -138,11 +161,16 @@ int main()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, CylinderVertices.size() * sizeof(float), &CylinderVertices[0], GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, EBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ARRAY_BUFFER, CylinderIndices.size() * sizeof(int), &CylinderIndices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -152,8 +180,9 @@ int main()
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
 
-        glDrawElements(GL_POINTS, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
-
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDrawElements(GL_TRIANGLES, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
