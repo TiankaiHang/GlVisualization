@@ -8,6 +8,21 @@ GLAD: https://glad.dav1d.de/
 
 ## Draw the Cylinder
 
-Some demo
+### Some demo
 
-![ball.png](https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball.png?raw=true)
+#### ball
+
+500*500 vertices
+
+<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball.png" style="zoom:50%">
+
+500*500 vertices
+
+<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball1.png" style="zoom:50%">
+
+50*50 vertices
+
+<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball2.png" style="zoom:50%">
+
+#### Cylinder
+
