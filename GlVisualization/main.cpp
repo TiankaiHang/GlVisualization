@@ -189,7 +189,8 @@ int main()
     for (int i = 0; i < 3; ++i)
         NORMAL[i] = NORMAL[i] * 1.0 / norm2OfVector;
 
-    //calculate the rotate matrix (Rodrigues¡¯ Rotation Formula)
+    //calculate the rotate matrix (Rodrigues' Rotation Formula)
+    //ref: https://sites.cs.ucsb.edu/~lingqi/teaching/resources/GAMES101_Lecture_04.pdf
     vector<float> ROTATE_MATRIX;
     ROTATE_MATRIX.resize(9);
     ROTATE_MATRIX[0] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[0] \
