@@ -67,3 +67,9 @@ vector<float> OFFSET = { 0.0, 0.0, 0.0 };
 ```
 
 <img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111.png" style="zoom:20%"/>
+
+with different colors illustrating
+
+<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111_diff_color.png" style="zoom:20%"/>
+
+<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111_diff_color_ploygon.png" style="zoom:20%"/>

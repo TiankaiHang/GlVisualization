@@ -35,17 +35,34 @@ const int SCREEN_HEIGHT = 800;
 // ============================================================
 //                           GLSL
 // ============================================================
+//const char* vertexShaderSource = "#version 330 core\n"
+//    "layout (location = 0) in vec3 aPos;\n"
+//    "void main()\n"
+//    "{\n"
+//    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+//    "}\0";
+//const char* fragmentShaderSource = "#version 330 core\n"
+//    "out vec4 FragColor;\n"
+//    "void main()\n"
+//    "{\n"
+//    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+//    "}\n\0";
 const char* vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
+    "layout (location = 1) in vec3 aColor;\n"
+    "out vec3 ourColor;\n"
+    "void main()"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "    gl_Position = vec4(aPos, 1.0);\n"
+    "    ourColor = aColor;\n"
     "}\0";
+
 const char* fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
+    "in vec3 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "    FragColor = vec4(ourColor, 1.0);\n"
     "}\n\0";
 // ============================================================
 
@@ -95,7 +112,7 @@ int main()
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     int shaderProgram = glCreateProgram();
@@ -222,9 +239,15 @@ int main()
             float _y = _r * sin(_theta);
             float _z = CYLINDER_HEIGHT / 2.0;
             rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
+            float _red = 0.8;
+            float _gre = 0.6;
+            float _blu = 0.7;
             CylinderVertices.push_back(_x);
             CylinderVertices.push_back(_y);
             CylinderVertices.push_back(_z);
+            CylinderVertices.push_back(_red);
+            CylinderVertices.push_back(_gre);
+            CylinderVertices.push_back(_blu);
             if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
                 CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
                 CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
@@ -244,10 +267,16 @@ int main()
             float _x = _r * cos(_theta);
             float _y = _r * sin(_theta);
             float _z = - CYLINDER_HEIGHT / 2.0;
+            float _red = 0.4;
+            float _gre = 0.4;
+            float _blu = 0.4;
             rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
             CylinderVertices.push_back(_x);
             CylinderVertices.push_back(_y);
             CylinderVertices.push_back(_z);
+            CylinderVertices.push_back(_red);
+            CylinderVertices.push_back(_gre);
+            CylinderVertices.push_back(_blu);
             if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
                 CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
                 CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
@@ -268,10 +297,16 @@ int main()
             float _x = CYLINDER_RADIUS * cos(_theta);
             float _y = CYLINDER_RADIUS * sin(_theta);
             float _z = -CYLINDER_HEIGHT / 2 + i * SIDE_FACE_HEIGHT_DELTA;
+            float _red = 0.8;
+            float _gre = 0.6;
+            float _blu = 0.7;
             rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
             CylinderVertices.push_back(_x);
             CylinderVertices.push_back(_y);
             CylinderVertices.push_back(_z);
+            CylinderVertices.push_back(_red);
+            CylinderVertices.push_back(_gre);
+            CylinderVertices.push_back(_blu);
             if (i != SIDE_FACE_INTERVALS_Y && j != SIDE_FACE_INTERVALS_X) {
                 CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
                 CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
@@ -304,8 +339,12 @@ int main()
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, SphereIndices.size() * sizeof(int), &SphereIndices[0], GL_STATIC_DRAW); //sphere
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); //triangle
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -329,8 +368,8 @@ int main()
         glfwPollEvents();
     }
 
-    string savepath = "figs/cylinder_norm111.png";
-    bool will_save = true;
+    string savepath = "figs/cylinder_norm111_diff_color_ploygon.png";
+    bool will_save = false;
     if(will_save)
         saveImage((char*)savepath.c_str(), window);
 
