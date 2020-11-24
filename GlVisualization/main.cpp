@@ -181,7 +181,7 @@ int main()
     const float SIDE_FACE_HEIGHT_DELTA = CYLINDER_HEIGHT / SIDE_FACE_INTERVALS_X;
     const int SIDE_FACE_INTERVALS_Y = 100;
     vector<float> NORMAL = { 0.0, 1.0, 0.0 };
-    float ROTATE_ANGLE = 60.0 * PI / 180.0;
+    float ROTATE_ANGLE = 45.0 * PI / 180.0;
     vector<float> OFFSET = { 0.0, 0.0, 0.0 };
 
     //normalize the normal vector
@@ -234,6 +234,7 @@ int main()
         }
     }
 
+    int inds_offset1 = (CIRCLE_FACE_RADIUS_INTERVALS + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1);
     for (int i = 0; i <= CIRCLE_FACE_RADIUS_INTERVALS; ++i) {
         for (int j = 0; j <= CIRCLE_FACE_ANGLE_INTERVALS; ++j) {
             float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
@@ -246,15 +247,18 @@ int main()
             CylinderVertices.push_back(_y);
             CylinderVertices.push_back(_z);
             if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
+                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
+                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
+                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
+                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
+                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
+                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
             }
         }
     }
+
+    //cout << CIRCLE_FACE_RADIUS_INTERVALS << " " << CIRCLE_FACE_ANGLE_INTERVALS << " " \
+    //    << CylinderVertices.size() << " " << CylinderIndices.size() << endl;
     //generate side face
 
     // ============================================================
@@ -292,7 +296,7 @@ int main()
         glCullFace(GL_BACK);
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         //glDrawElements(GL_TRIANGLES, INTERVALS * INTERVALS * 6, GL_UNSIGNED_INT, 0);
-        glDrawElements(GL_TRIANGLES, CylinderIndices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, CylinderIndices.size() * 2, GL_UNSIGNED_INT, 0);
         //glDrawElements(GL_TRIANGLES, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
