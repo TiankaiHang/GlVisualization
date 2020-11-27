@@ -97,27 +97,11 @@ def generateCylinderData(radius=0.5, height=1.6, \
         'side_face_inds_np': side_face_inds_np,
     }
 
-    print(front_circle_np.shape, behind_circle_np.shape, side_face_np.shape, front_circle_inds_up.shape, behind_circle_inds_np.shape, side_face_inds_np.shape)
-
-    # print(front_circle_np.shape, behind_circle_np.shape, side_face_np.shape)
-    # front_sample_vertices_inds = np.sort(np.random.choice(front_circle_np.shape[0], N_circle))
-    # behind_sample_vertices_inds = np.sort(np.random.choice(behind_circle_np.shape[0], N_circle))
-    # side_sample_vretices_inds = np.sort(np.random.choice(side_face_np.shape[0], N_side))
-
-    # front_sample_vertices = front_circle_np[front_sample_vertices_inds, :]
-    # behind_sample_vertices = behind_circle_np[behind_sample_vertices_inds, :]
-    # side_sample_vretices = side_face_np[side_sample_vretices_inds, :]
-
-    # print(front_sample_vertices.shape, behind_sample_vertices.shape, side_sample_vretices.shape)
+    print(front_circle_np.shape, behind_circle_np.shape, side_face_np.shape, \
+        front_circle_inds_up.shape, behind_circle_inds_np.shape, side_face_inds_np.shape)
 
     return end_points
 
-# def generateMeshInds(N_circle, N_side):
-#     front_face_inds = []
-#     behind_face_inds = []
-#     side_face_inds = []
-
-#     for i in range()
 def rotate_raw_data(theta1, theta2, theta3):
     rotate_mat = getRotateMat(theta1, theta2, theta3)
     end_points = generateCylinderData()
@@ -133,14 +117,11 @@ def rotate_raw_data(theta1, theta2, theta3):
 
 
 if __name__ == '__main__':
-    N_circle = 300
-    N_side = 600
-    #end_points = generateCylinderData()
 
     theta = [45, 45, 45]
     rotate_mat = getRotateMat(*theta)
     end_points = rotate_raw_data(*theta)
-    # print(end_points)
+
     # print(end_points['front_circle_np'].shape, end_points['behind_circle_np'].shape, end_points['side_face_np'].shape)
     X = np.concatenate((end_points['front_circle_np'], end_points['behind_circle_np'], end_points['side_face_np']), axis=0)
     print(X.shape)
