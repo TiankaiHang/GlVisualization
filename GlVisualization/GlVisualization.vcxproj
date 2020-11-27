@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_for_mu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image_write.h" />
