@@ -138,6 +138,7 @@
 //        glBindVertexArray(VAO);
 //
 //        glEnable(GL_CULL_FACE);
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //        //glCullFace(GL_BACK);
 //        glDrawElements(GL_TRIANGLES, Indices.size() * 2, GL_UNSIGNED_INT, 0);
 //        glfwSwapBuffers(window);

@@ -28,6 +28,13 @@ void processInput(GLFWwindow* window);
 void saveImage(char* filepath, GLFWwindow* w);
 void rotate_and_shift(float& _x, float& _y, float& _z, const vector<float>& rotate_mat, const vector<float>& offset);
 
+// generate data for two triangles
+void generateTriangleData(vector<float>& Vertices, vector<int>& Indices);
+// generate data for Cylinder
+void generateCylinderData(vector<float>& Vertices, vector<int>& Indices);
+// generate data for Sphere of a ball
+void generateSphereData(vector<float>& Vertices, vector<int>& Indices);
+
 const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 800;
 
@@ -128,201 +135,13 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // ============================================================
-    //                        Triangle
-    // ============================================================
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
-    // ============================================================
+    vector<float> Vertices;
+    vector<int> Indices;
 
-    // ============================================================
-    //                        Sphere
-    // ============================================================
-    vector<float> SphereVertices;
-    vector<int> SphereIndices;
+    // generateCylinderData(Vertices, Indices);
+    // generateSphereData(Vertices, Indices);
+    generateTriangleData(Vertices, Indices);
 
-    const float RADIUS = 0.8;
-    const int INTERVALS = 50;
-    const float ANGLE_INTERVAL = 2.0 * PI / INTERVALS;
-    int index_point = 0;
-    for (int i = 0; i <= INTERVALS; ++i) {
-        for (int j = 0; j <= INTERVALS; ++j) {
-            float theta = i * 1.0 * ANGLE_INTERVAL;
-            float alpha = j * 1.0 * ANGLE_INTERVAL;
-            float x = RADIUS * cos(alpha) * cos(theta);
-            float y = RADIUS * cos(alpha) * sin(theta);
-            float z = RADIUS * sin(alpha);
-            //cout << x << " " << y << " " << z << endl;
-
-            SphereVertices.push_back(x);
-            SphereVertices.push_back(y);
-            SphereVertices.push_back(z);
-
-            //CylinderIndices.push_back(index_point++);
-            //cout << index_point;
-            if (i != INTERVALS && j != INTERVALS) {
-                SphereIndices.push_back(i * (INTERVALS + 1) + j);
-                SphereIndices.push_back((i + 1) * (INTERVALS + 1) + j);
-                SphereIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
-                SphereIndices.push_back(i * (INTERVALS + 1) + j);
-                SphereIndices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
-                SphereIndices.push_back(i * (INTERVALS + 1) + j + 1);
-            }
-        }
-    }
-    // ============================================================
-
-    // ============================================================
-    //                        Cylinder
-    // ============================================================
-    vector<float> CylinderVertices;
-    vector<int> CylinderIndices;
-    const float CYLINDER_RADIUS = 0.5;
-    const float CYLINDER_HEIGHT = 1.0;
-    const int CIRCLE_FACE_ANGLE_INTERVALS = 100;
-    const int CIRCLE_FACE_RADIUS_INTERVALS = 100;
-    
-    const float CIRCLE_FACE_ANGLE_DELTA = 2.0 * PI / CIRCLE_FACE_ANGLE_INTERVALS;
-    const float CIRCLE_FACE_RADIUS_DELTA = CYLINDER_RADIUS / CIRCLE_FACE_RADIUS_INTERVALS;
-
-    const int SIDE_FACE_INTERVALS_X = 100;
-    const int SIDE_FACE_INTERVALS_Y = 100;
-    const float SIDE_FACE_ANGLE_DELTA = 2.0 * PI / SIDE_FACE_INTERVALS_X;
-    const float SIDE_FACE_HEIGHT_DELTA = CYLINDER_HEIGHT / SIDE_FACE_INTERVALS_Y;
-    
-    vector<float> NORMAL = { 1.0, 1.0, 1.0 };
-    float ROTATE_ANGLE = 60.0 * PI / 180.0;
-    vector<float> OFFSET = { 0.0, 0.0, 0.0 };
-
-    //normalize the normal vector
-    float norm2OfVector = sqrt(NORMAL[0] * NORMAL[0] + NORMAL[1] * NORMAL[1] + NORMAL[2] * NORMAL[2]);
-    for (int i = 0; i < 3; ++i)
-        NORMAL[i] = NORMAL[i] * 1.0 / norm2OfVector;
-
-    //calculate the rotate matrix (Rodrigues' Rotation Formula)
-    //ref: https://sites.cs.ucsb.edu/~lingqi/teaching/resources/GAMES101_Lecture_04.pdf
-    vector<float> ROTATE_MATRIX;
-    ROTATE_MATRIX.resize(9);
-    ROTATE_MATRIX[0] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[0] \
-        + sin(ROTATE_ANGLE) * 0.0;
-    ROTATE_MATRIX[1] =               0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[1] \
-        - sin(ROTATE_ANGLE) * NORMAL[2];
-    ROTATE_MATRIX[2] =               0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[2] \
-        + sin(ROTATE_ANGLE) * NORMAL[1];
-    ROTATE_MATRIX[3] =               0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[1] * NORMAL[0] \
-        + sin(ROTATE_ANGLE) * NORMAL[2];
-    ROTATE_MATRIX[4] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[1] * NORMAL[1] \
-        + sin(ROTATE_ANGLE) * 0.0;
-    ROTATE_MATRIX[5] =               0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[1] * NORMAL[2] \
-        - sin(ROTATE_ANGLE) * NORMAL[0];
-    ROTATE_MATRIX[6] =               0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[2] * NORMAL[0] \
-        - sin(ROTATE_ANGLE) * NORMAL[1];
-    ROTATE_MATRIX[7] =               0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[2] * NORMAL[1] \
-        + sin(ROTATE_ANGLE) * NORMAL[0];
-    ROTATE_MATRIX[8] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[2] * NORMAL[2] \
-        + sin(ROTATE_ANGLE) * 0.0;
-
-    //generate two circle faces
-    for (int i = 0; i <= CIRCLE_FACE_RADIUS_INTERVALS; ++i) {
-        for (int j = 0; j <= CIRCLE_FACE_ANGLE_INTERVALS; ++j) {
-            float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
-            float _theta = j * 1.0 * CIRCLE_FACE_ANGLE_DELTA;
-            float _x = _r * cos(_theta);
-            float _y = _r * sin(_theta);
-            float _z = CYLINDER_HEIGHT / 2.0;
-            rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
-            float _red = 0.8;
-            float _gre = 0.6;
-            float _blu = 0.7;
-            CylinderVertices.push_back(_x);
-            CylinderVertices.push_back(_y);
-            CylinderVertices.push_back(_z);
-            CylinderVertices.push_back(_red);
-            CylinderVertices.push_back(_gre);
-            CylinderVertices.push_back(_blu);
-            if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
-            }
-        }
-    }
-
-    int inds_offset1 = (CIRCLE_FACE_RADIUS_INTERVALS + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1);
-    for (int i = 0; i <= CIRCLE_FACE_RADIUS_INTERVALS; ++i) {
-        for (int j = 0; j <= CIRCLE_FACE_ANGLE_INTERVALS; ++j) {
-            float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
-            float _theta = j * 1.0 * CIRCLE_FACE_ANGLE_DELTA;
-            float _x = _r * cos(_theta);
-            float _y = _r * sin(_theta);
-            float _z = - CYLINDER_HEIGHT / 2.0;
-            float _red = 0.4;
-            float _gre = 0.4;
-            float _blu = 0.4;
-            rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
-            CylinderVertices.push_back(_x);
-            CylinderVertices.push_back(_y);
-            CylinderVertices.push_back(_z);
-            CylinderVertices.push_back(_red);
-            CylinderVertices.push_back(_gre);
-            CylinderVertices.push_back(_blu);
-            if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
-            }
-        }
-    }
-
-    //generate side face
-    int inds_offset2 = (CIRCLE_FACE_RADIUS_INTERVALS + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) * 2;
-    for (int i = 0; i <= SIDE_FACE_INTERVALS_Y; ++i) {
-        for (int j = 0; j <= SIDE_FACE_INTERVALS_X; ++j) {
-            //float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
-            float _theta = j * 1.0 * SIDE_FACE_ANGLE_DELTA;
-            float _x = CYLINDER_RADIUS * cos(_theta);
-            float _y = CYLINDER_RADIUS * sin(_theta);
-            float _z = -CYLINDER_HEIGHT / 2 + i * SIDE_FACE_HEIGHT_DELTA;
-            float _red = 0.8;
-            float _gre = 0.6;
-            float _blu = 0.7;
-            rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
-            CylinderVertices.push_back(_x);
-            CylinderVertices.push_back(_y);
-            CylinderVertices.push_back(_z);
-            CylinderVertices.push_back(_red);
-            CylinderVertices.push_back(_gre);
-            CylinderVertices.push_back(_blu);
-            if (i != SIDE_FACE_INTERVALS_Y && j != SIDE_FACE_INTERVALS_X) {
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset2);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
-                CylinderIndices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset2);
-                CylinderIndices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset2);
-            }
-        }
-    }
-
-    //cout << CIRCLE_FACE_RADIUS_INTERVALS << " " << CIRCLE_FACE_ANGLE_INTERVALS << " " \
-    //    << CylinderVertices.size() << " " << CylinderIndices.size() << endl;
-    
-
-    // ============================================================
 
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -331,11 +150,11 @@ int main()
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, CylinderVertices.size() * sizeof(float), &CylinderVertices[0], GL_STATIC_DRAW); //cylinder
+    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), &Vertices[0], GL_STATIC_DRAW); //cylinder
     //glBufferData(GL_ARRAY_BUFFER, SphereVertices.size() * sizeof(float), &SphereVertices[0], GL_STATIC_DRAW); //sphere
     //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //triangle
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, CylinderIndices.size() * sizeof(int), &CylinderIndices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(int), &Indices[0], GL_STATIC_DRAW);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, SphereIndices.size() * sizeof(int), &SphereIndices[0], GL_STATIC_DRAW); //sphere
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); //triangle
 
@@ -357,13 +176,10 @@ int main()
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
 
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        //glDrawElements(GL_TRIANGLES, INTERVALS * INTERVALS * 6, GL_UNSIGNED_INT, 0);
-        glDrawElements(GL_TRIANGLES, CylinderIndices.size() * 2, GL_UNSIGNED_INT, 0);
-        //glDrawElements(GL_TRIANGLES, (INTERVALS + 1) * (INTERVALS + 1), GL_UNSIGNED_INT, 0);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -377,7 +193,6 @@ int main()
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
     glDeleteProgram(shaderProgram);
-
 
     glfwTerminate();
     return 0;
@@ -418,4 +233,195 @@ void rotate_and_shift(float& _x, float& _y, float& _z, const vector<float>& rota
     _x = x_new;
     _y = y_new;
     _z = z_new;
+}
+
+void generateTriangleData(vector<float>& Vertices, vector<int>& Indices) {
+    float vertices[] = {
+         0.5f,  0.5f, 0.0f, 1.0f, 0.5f, 0.2f,  // top right
+         0.5f, -0.5f, 0.0f, 1.0f, 0.5f, 0.2f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.5f, 0.2f,  // bottom left
+        -0.5f,  0.5f, 0.0f, 1.0f, 0.5f, 0.2f,  // top left 
+    };
+
+    int indices[] = {
+        0, 1, 3,  // first Triangle
+        1, 2, 3   // second Triangle
+    };
+    for (int i = 0; i < 24; ++i)
+        Vertices.push_back(vertices[i]);
+    for (int j = 0; j < 6; ++j)
+        Indices.push_back(indices[j]);
+}
+
+void generateCylinderData(vector<float>& Vertices, vector<int>& Indices) {
+    const float CYLINDER_RADIUS = 0.5;
+    const float CYLINDER_HEIGHT = 1.0;
+    const int CIRCLE_FACE_ANGLE_INTERVALS = 100;
+    const int CIRCLE_FACE_RADIUS_INTERVALS = 100;
+
+    const float CIRCLE_FACE_ANGLE_DELTA = 2.0 * PI / CIRCLE_FACE_ANGLE_INTERVALS;
+    const float CIRCLE_FACE_RADIUS_DELTA = CYLINDER_RADIUS / CIRCLE_FACE_RADIUS_INTERVALS;
+
+    const int SIDE_FACE_INTERVALS_X = 100;
+    const int SIDE_FACE_INTERVALS_Y = 100;
+    const float SIDE_FACE_ANGLE_DELTA = 2.0 * PI / SIDE_FACE_INTERVALS_X;
+    const float SIDE_FACE_HEIGHT_DELTA = CYLINDER_HEIGHT / SIDE_FACE_INTERVALS_Y;
+
+    vector<float> NORMAL = { 1.0, 1.0, 1.0 };
+    float ROTATE_ANGLE = 60.0 * PI / 180.0;
+    vector<float> OFFSET = { 0.0, 0.0, 0.0 };
+
+    //normalize the normal vector
+    float norm2OfVector = sqrt(NORMAL[0] * NORMAL[0] + NORMAL[1] * NORMAL[1] + NORMAL[2] * NORMAL[2]);
+    for (int i = 0; i < 3; ++i)
+        NORMAL[i] = NORMAL[i] * 1.0 / norm2OfVector;
+
+    //calculate the rotate matrix (Rodrigues' Rotation Formula)
+    //ref: https://sites.cs.ucsb.edu/~lingqi/teaching/resources/GAMES101_Lecture_04.pdf
+    vector<float> ROTATE_MATRIX;
+    ROTATE_MATRIX.resize(9);
+    ROTATE_MATRIX[0] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[0] \
+        + sin(ROTATE_ANGLE) * 0.0;
+    ROTATE_MATRIX[1] = 0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[1] \
+        - sin(ROTATE_ANGLE) * NORMAL[2];
+    ROTATE_MATRIX[2] = 0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[0] * NORMAL[2] \
+        + sin(ROTATE_ANGLE) * NORMAL[1];
+    ROTATE_MATRIX[3] = 0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[1] * NORMAL[0] \
+        + sin(ROTATE_ANGLE) * NORMAL[2];
+    ROTATE_MATRIX[4] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[1] * NORMAL[1] \
+        + sin(ROTATE_ANGLE) * 0.0;
+    ROTATE_MATRIX[5] = 0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[1] * NORMAL[2] \
+        - sin(ROTATE_ANGLE) * NORMAL[0];
+    ROTATE_MATRIX[6] = 0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[2] * NORMAL[0] \
+        - sin(ROTATE_ANGLE) * NORMAL[1];
+    ROTATE_MATRIX[7] = 0.0 + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[2] * NORMAL[1] \
+        + sin(ROTATE_ANGLE) * NORMAL[0];
+    ROTATE_MATRIX[8] = cos(ROTATE_ANGLE) + (1.0 - cos(ROTATE_ANGLE)) * NORMAL[2] * NORMAL[2] \
+        + sin(ROTATE_ANGLE) * 0.0;
+
+    //generate two circle faces
+    for (int i = 0; i <= CIRCLE_FACE_RADIUS_INTERVALS; ++i) {
+        for (int j = 0; j <= CIRCLE_FACE_ANGLE_INTERVALS; ++j) {
+            float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
+            float _theta = j * 1.0 * CIRCLE_FACE_ANGLE_DELTA;
+            float _x = _r * cos(_theta);
+            float _y = _r * sin(_theta);
+            float _z = CYLINDER_HEIGHT / 2.0;
+            rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
+            float _red = 0.8;
+            float _gre = 0.6;
+            float _blu = 0.7;
+            Vertices.push_back(_x);
+            Vertices.push_back(_y);
+            Vertices.push_back(_z);
+            Vertices.push_back(_red);
+            Vertices.push_back(_gre);
+            Vertices.push_back(_blu);
+            if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1);
+            }
+        }
+    }
+
+    int inds_offset1 = (CIRCLE_FACE_RADIUS_INTERVALS + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1);
+    for (int i = 0; i <= CIRCLE_FACE_RADIUS_INTERVALS; ++i) {
+        for (int j = 0; j <= CIRCLE_FACE_ANGLE_INTERVALS; ++j) {
+            float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
+            float _theta = j * 1.0 * CIRCLE_FACE_ANGLE_DELTA;
+            float _x = _r * cos(_theta);
+            float _y = _r * sin(_theta);
+            float _z = -CYLINDER_HEIGHT / 2.0;
+            float _red = 0.4;
+            float _gre = 0.4;
+            float _blu = 0.4;
+            rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
+            Vertices.push_back(_x);
+            Vertices.push_back(_y);
+            Vertices.push_back(_z);
+            Vertices.push_back(_red);
+            Vertices.push_back(_gre);
+            Vertices.push_back(_blu);
+            if (i != CIRCLE_FACE_RADIUS_INTERVALS && j != CIRCLE_FACE_ANGLE_INTERVALS) {
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset1);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset1);
+            }
+        }
+    }
+
+    //generate side face
+    int inds_offset2 = (CIRCLE_FACE_RADIUS_INTERVALS + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) * 2;
+    for (int i = 0; i <= SIDE_FACE_INTERVALS_Y; ++i) {
+        for (int j = 0; j <= SIDE_FACE_INTERVALS_X; ++j) {
+            //float _r = i * 1.0 * CIRCLE_FACE_RADIUS_DELTA;
+            float _theta = j * 1.0 * SIDE_FACE_ANGLE_DELTA;
+            float _x = CYLINDER_RADIUS * cos(_theta);
+            float _y = CYLINDER_RADIUS * sin(_theta);
+            float _z = -CYLINDER_HEIGHT / 2 + i * SIDE_FACE_HEIGHT_DELTA;
+            float _red = 0.8;
+            float _gre = 0.6;
+            float _blu = 0.7;
+            rotate_and_shift(_x, _y, _z, ROTATE_MATRIX, OFFSET);
+            Vertices.push_back(_x);
+            Vertices.push_back(_y);
+            Vertices.push_back(_z);
+            Vertices.push_back(_red);
+            Vertices.push_back(_gre);
+            Vertices.push_back(_blu);
+            if (i != SIDE_FACE_INTERVALS_Y && j != SIDE_FACE_INTERVALS_X) {
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset2);
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + inds_offset2);
+                Indices.push_back((i + 1) * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset2);
+                Indices.push_back(i * (CIRCLE_FACE_ANGLE_INTERVALS + 1) + j + 1 + inds_offset2);
+            }
+        }
+    }
+}
+
+void generateSphereData(vector<float>& Vertices, vector<int>& Indices) {
+    const float RADIUS = 0.8;
+    const int INTERVALS = 50;
+    const float ANGLE_INTERVAL = 2.0 * PI / INTERVALS;
+    int index_point = 0;
+    for (int i = 0; i <= INTERVALS; ++i) {
+        for (int j = 0; j <= INTERVALS; ++j) {
+            float theta = i * 1.0 * ANGLE_INTERVAL;
+            float alpha = j * 1.0 * ANGLE_INTERVAL;
+            float x = RADIUS * cos(alpha) * cos(theta);
+            float y = RADIUS * cos(alpha) * sin(theta);
+            float z = RADIUS * sin(alpha);
+            //cout << x << " " << y << " " << z << endl;
+
+            Vertices.push_back(x);
+            Vertices.push_back(y);
+            Vertices.push_back(z);
+            float _red = 1.0;
+            float _gre = 0.5;
+            float _blu = 0.2;
+            Vertices.push_back(_red);
+            Vertices.push_back(_gre);
+            Vertices.push_back(_blu);
+
+            //CylinderIndices.push_back(index_point++);
+            //cout << index_point;
+            if (i != INTERVALS && j != INTERVALS) {
+                Indices.push_back(i * (INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+                Indices.push_back(i * (INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+                Indices.push_back(i * (INTERVALS + 1) + j + 1);
+            }
+        }
+    }
 }
