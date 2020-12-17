@@ -193,10 +193,10 @@ int main()
         glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         glm::mat4 projection = glm::mat4(1.0f);
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(20.0f * 1), glm::vec3(0.0f, 0.0f, 1.0f));
-        projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        model = glm::rotate(model, glm::radians(-20.0f * 1), glm::vec3(1.0f, 0.5f, 0.2f));
+        //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
         // pass transformation matrices to the shader
         ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         ourShader.setMat4("view", view);
@@ -205,7 +205,7 @@ int main()
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         
         glfwSwapBuffers(window);
@@ -463,7 +463,7 @@ void generateShadedBall(vector<float>& Vertices, vector<int>& Indices) {
 }
 
 void generateCubic(vector<float>& Vertices, vector<int>& Indices) {
-    const float length_half = 0.6;
+    const float length_half = 0.3;
     float vertices[] = {
         -length_half,  length_half,  length_half, 1.0f, 0.0f, 0.0f,
          length_half,  length_half,  length_half, 0.0f, 1.0f, 0.0f,
@@ -475,8 +475,8 @@ void generateCubic(vector<float>& Vertices, vector<int>& Indices) {
          length_half, -length_half, -length_half, 0.0f, 0.0f, 1.0f,
     };
     int indices[] = {
-        0, 1, 3, 0, 2, 3, 0, 1, 5, 0, 4, 5, 0, 2, 6, 0, 4, 6,
-        7, 3, 5, 7, 3, 6, 7, 5, 6, 2, 3, 6, 5, 4, 6, 5, 1, 3,
+        0, 2, 4, 0, 2, 1, 0, 4, 1, 3, 2, 7, 3, 2, 1, 3, 7, 1,
+        5, 4, 1, 5, 7, 1, 5, 4, 7, 6, 4, 2, 6, 4, 7, 6, 2, 7,
     };
 
     for (int i = 0; i < 8 * 6; ++i)
