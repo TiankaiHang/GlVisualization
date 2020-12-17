@@ -34,5 +34,6 @@
   <ItemGroup>
     <None Include="shader.vs" />
     <None Include="shader.fs" />
+    <None Include="perShader.vs" />
   </ItemGroup>
 </Project>

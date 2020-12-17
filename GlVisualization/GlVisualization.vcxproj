@@ -155,6 +155,7 @@
     <ClInclude Include="stb_image_write.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="perShader.vs" />
     <None Include="shader.fs" />
     <None Include="shader.vs" />
   </ItemGroup>

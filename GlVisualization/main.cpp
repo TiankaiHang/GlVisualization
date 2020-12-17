@@ -13,6 +13,12 @@
 #include <map>
 #include <string>
 #include <cmath>
+
+// glm
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "shader.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -139,8 +145,8 @@ int main()
     vector<float> Vertices;
     vector<int> Indices;
 
-    generateCylinderData(Vertices, Indices);
-    // generateSphereData(Vertices, Indices);
+    // generateCylinderData(Vertices, Indices);
+    generateSphereData(Vertices, Indices);
     // generateTriangleData(Vertices, Indices);
 
 
@@ -169,7 +175,7 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    Shader ourShader("shader.vs", "shader.fs");
+    Shader ourShader("perShader.vs", "shader.fs");
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
@@ -180,13 +186,30 @@ int main()
         ourShader.use();
         ourShader.setFloat("someUniform", 1.0f);
         
+        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        glm::mat4 projection = glm::mat4(1.0f);
+        
+        projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+        // pass transformation matrices to the shader
+        ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+        ourShader.setMat4("view", view);
         
         glBindVertexArray(VAO);
+        for (int i = 0; i < 18; ++i) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::rotate(model, glm::radians(20.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+            ourShader.setMat4("model", model);
+            //glBindVertexArray(VAO);
 
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        }
+        
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
