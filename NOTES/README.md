@@ -19,5 +19,14 @@ https://blog.csdn.net/HW140701/article/details/53243733
 - SSD (shaded surface display ?) 表面光线
 - mid (maximum intensity projection ?) 最大值
 - drr (Digital Reconstruction Radiography ?)平均值
-- 
+
+
+
+## Useful URL
+
+https://web.cs.wpi.edu/~matt/courses/cs563/talks/powwie/p1/ray-cast.htm
+
+https://viscircle.de/guide-for-beginners-what-is-volume-ray-casting/?lang=en
+
+
 
