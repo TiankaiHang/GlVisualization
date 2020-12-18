@@ -20,6 +20,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.h"
+#include "camera.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -47,6 +48,14 @@ void generateCubic(vector<float>& Vertices, vector<int>& Indices);
 
 const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 800;
+
+// camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+// timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+// lighting
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 
 // ============================================================
@@ -179,7 +188,7 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    Shader ourShader("perShader.vs", "shader.fs");
+    Shader ourShader("myShader/perShader.vs", "myShader/shader.fs");
 
     //while (!glfwWindowShouldClose(window)) {
     //    processInput(window);
@@ -234,7 +243,7 @@ int main()
         
         glBindVertexArray(VAO);
         glEnable(GL_DEPTH_TEST);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         //for (int i = 0; i < 18; ++i) {
             glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -279,6 +288,16 @@ void processInput(GLFWwindow* window) {
     // esc to exit
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 
@@ -513,7 +532,7 @@ void generateCubic(vector<float>& Vertices, vector<int>& Indices) {
          length_half,  length_half,  length_half - length_half, 0.0f, 1.0f, 0.0f,
         -length_half, -length_half,  length_half - length_half, 0.0f, 0.0f, 1.0f,
          length_half, -length_half,  length_half - length_half, 1.0f, 0.0f, 0.0f,
-        -length_half,  length_half, -length_half - length_half, 0.0f, 1.0f, 0.0f,
+        -length_half,  length_half, -length_half - length_half, 0.0f, 0.0f, 1.0f,
          length_half,  length_half, -length_half - length_half, 1.0f, 0.0f, 0.0f,
         -length_half, -length_half, -length_half - length_half, 0.0f, 1.0f, 0.0f,
          length_half, -length_half, -length_half - length_half, 0.0f, 0.0f, 1.0f,

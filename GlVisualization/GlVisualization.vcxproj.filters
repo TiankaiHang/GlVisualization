@@ -30,10 +30,13 @@
     <ClInclude Include="shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vs" />
-    <None Include="shader.fs" />
-    <None Include="perShader.vs" />
+    <None Include="myShader\shader.fs" />
+    <None Include="myShader\shader.vs" />
+    <None Include="myShader\perShader.vs" />
   </ItemGroup>
 </Project>
