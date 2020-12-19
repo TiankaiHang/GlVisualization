@@ -332,29 +332,29 @@ using namespace std;
 //    // normal vector at (x, y, z) is (x / r, y / r, z / r)
 //}
 //
-//void generateCubic(vector<float>& Vertices, vector<int>& Indices) {
-//    const float length_half = 0.3;
-//    float vertices[] = {
-//        -length_half,  length_half,  length_half - length_half, 1.0f, 0.0f, 0.0f,
-//         length_half,  length_half,  length_half - length_half, 0.0f, 1.0f, 0.0f,
-//        -length_half, -length_half,  length_half - length_half, 0.0f, 0.0f, 1.0f,
-//         length_half, -length_half,  length_half - length_half, 1.0f, 0.0f, 0.0f,
-//        -length_half,  length_half, -length_half - length_half, 0.0f, 0.0f, 1.0f,
-//         length_half,  length_half, -length_half - length_half, 1.0f, 0.0f, 0.0f,
-//        -length_half, -length_half, -length_half - length_half, 0.0f, 1.0f, 0.0f,
-//         length_half, -length_half, -length_half - length_half, 0.0f, 0.0f, 1.0f,
-//    };
-//    int indices[] = {
-//        0, 2, 4, 0, 2, 1, 0, 4, 1, 3, 2, 7, 3, 2, 1, 3, 7, 1,
-//        5, 4, 1, 5, 7, 1, 5, 4, 7, 6, 4, 2, 6, 4, 7, 6, 2, 7,
-//    };
-//
-//    for (int i = 0; i < 8 * 6; ++i)
-//        Vertices.push_back(vertices[i]);
-//    for (int j = 0; j < 36; ++j)
-//        Indices.push_back(indices[j]);
-//}
-//
+void generateCubic_with_color(vector<float>& Vertices, vector<int>& Indices) {
+    const float length_half = 0.3;
+    float vertices[] = {
+        -length_half,  length_half,  length_half - length_half, 1.0f, 0.0f, 0.0f,
+         length_half,  length_half,  length_half - length_half, 0.0f, 1.0f, 0.0f,
+        -length_half, -length_half,  length_half - length_half, 0.0f, 0.0f, 1.0f,
+         length_half, -length_half,  length_half - length_half, 1.0f, 0.0f, 0.0f,
+        -length_half,  length_half, -length_half - length_half, 0.0f, 0.0f, 1.0f,
+         length_half,  length_half, -length_half - length_half, 1.0f, 0.0f, 0.0f,
+        -length_half, -length_half, -length_half - length_half, 0.0f, 1.0f, 0.0f,
+         length_half, -length_half, -length_half - length_half, 0.0f, 0.0f, 1.0f,
+    };
+    int indices[] = {
+        0, 2, 4, 0, 2, 1, 0, 4, 1, 3, 2, 7, 3, 2, 1, 3, 7, 1,
+        5, 4, 1, 5, 7, 1, 5, 4, 7, 6, 4, 2, 6, 4, 7, 6, 2, 7,
+    };
+
+    for (int i = 0; i < 8 * 6; ++i)
+        Vertices.push_back(vertices[i]);
+    for (int j = 0; j < 36; ++j)
+        Indices.push_back(indices[j]);
+}
+
 
 
 // settings
@@ -829,7 +829,7 @@ int draw_cubic() {
     // generateCylinderData(Vertices, Indices);
     // generateSphereData(Vertices, Indices);
     // generateTriangleData(Vertices, Indices);
-    generateCubicData(Vertices, Indices);
+    generateCubic_with_color(Vertices, Indices);
 
 
     unsigned int VAO, VBO, EBO;
