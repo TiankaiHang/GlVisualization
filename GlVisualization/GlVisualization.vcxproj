@@ -156,6 +156,10 @@
     <ClInclude Include="stb_image_write.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="myShader\basic_lightning.fs" />
+    <None Include="myShader\basic_lightning.vs" />
+    <None Include="myShader\cubic_lightning.fs" />
+    <None Include="myShader\cubic_lightning.vs" />
     <None Include="myShader\perShader.vs" />
     <None Include="myShader\shader.fs" />
     <None Include="myShader\shader.vs" />

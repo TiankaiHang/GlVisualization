@@ -38,5 +38,9 @@
     <None Include="myShader\shader.fs" />
     <None Include="myShader\shader.vs" />
     <None Include="myShader\perShader.vs" />
+    <None Include="myShader\basic_lightning.fs" />
+    <None Include="myShader\basic_lightning.vs" />
+    <None Include="myShader\cubic_lightning.fs" />
+    <None Include="myShader\cubic_lightning.vs" />
   </ItemGroup>
 </Project>
