@@ -122,21 +122,7 @@ using namespace std;
 //}
 //
 //
-//void saveImage(char* filepath, GLFWwindow* w) {
-//    //ref: https://lencerf.github.io/post/2019-09-21-save-the-opengl-rendering-to-image-file/
-//    int width, height;
-//    glfwGetFramebufferSize(w, &width, &height);
-//    GLsizei nrChannels = 3;
-//    GLsizei stride = nrChannels * width;
-//    stride += (stride % 4) ? (4 - stride % 4) : 0;
-//    GLsizei bufferSize = stride * height;
-//    std::vector<char> buffer(bufferSize);
-//    glPixelStorei(GL_PACK_ALIGNMENT, 4);
-//    glReadBuffer(GL_FRONT);
-//    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
-//    stbi_flip_vertically_on_write(true);
-//    stbi_write_png(filepath, width, height, nrChannels, buffer.data(), stride);
-//}
+
 //
 //void rotate_and_shift(float& _x, float& _y, float& _z, const vector<float>& rotate_mat, const vector<float>& offset) {
 //    float x_new = _x * rotate_mat[0] + _y * rotate_mat[1] + _z * rotate_mat[2] + offset[0];
@@ -369,199 +355,16 @@ using namespace std;
 //        Indices.push_back(indices[j]);
 //}
 //
-//int draw_cubic() {
-//    glfwInit();
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-//    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//
-//    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Draw Cylinder", NULL, NULL);
-//    if (window == NULL) {
-//        cout << "Fail to create the window." << endl;
-//        glfwTerminate();
-//        return -1;
-//    }
-//    glfwMakeContextCurrent(window);
-//
-//    //glViewport(0, 0, 800, 600);
-//    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-//
-//    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-//        cout << "Fail to initialize GLAD" << endl;
-//        return -1;
-//    }
-//
-//    //vertex shader
-//    //int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-//    //glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-//    //glCompileShader(vertexShader);
-//    int success;
-//    char infoLog[512];
-//    //glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-//    //if (!success)
-//    //{
-//    //    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-//    //    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-//    //}
-//
-//
-//    //fragment shader
-//    //int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-//    //glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-//    //glCompileShader(fragmentShader);
-//    //glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-//    //if (!success)
-//    //{
-//    //    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-//    //    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-//    //}
-//
-//    //int shaderProgram = glCreateProgram();
-//    //glAttachShader(shaderProgram, vertexShader);
-//    //glAttachShader(shaderProgram, fragmentShader);
-//    //glLinkProgram(shaderProgram);
-//    //glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-//    //if (!success) {
-//    //    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-//    //    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-//    //}
-//
-//    //glDeleteShader(vertexShader);
-//    //glDeleteShader(fragmentShader);
-//
-//    vector<float> Vertices;
-//    vector<int> Indices;
-//
-//    // generateCylinderData(Vertices, Indices);
-//    // generateSphereData(Vertices, Indices);
-//    // generateTriangleData(Vertices, Indices);
-//    generateCubic(Vertices, Indices);
-//
-//
-//    unsigned int VAO, VBO, EBO;
-//    glGenVertexArrays(1, &VAO);
-//    glGenBuffers(1, &VBO);
-//    glGenBuffers(1, &EBO);
-//
-//    glBindVertexArray(VAO);
-//    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), &Vertices[0], GL_STATIC_DRAW); //cylinder
-//    //glBufferData(GL_ARRAY_BUFFER, SphereVertices.size() * sizeof(float), &SphereVertices[0], GL_STATIC_DRAW); //sphere
-//    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //triangle
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(int), &Indices[0], GL_STATIC_DRAW);
-//    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, SphereIndices.size() * sizeof(int), &SphereIndices[0], GL_STATIC_DRAW); //sphere
-//    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); //triangle
-//
-//    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-//    //glEnableVertexAttribArray(0);
-//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-//    glEnableVertexAttribArray(0);
-//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-//    glEnableVertexAttribArray(1);
-//
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-//    glBindVertexArray(0);
-//
-//    Shader ourShader("myShader/perShader.vs", "myShader/shader.fs");
-//
-//    //while (!glfwWindowShouldClose(window)) {
-//    //    processInput(window);
-//    //    glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-//    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//    //    //glUseProgram(shaderProgram);
-//    //    ourShader.use();
-//    //    ourShader.setFloat("someUniform", 1.0f);
-//    //    
-//    //    glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-//    //    glm::mat4 projection = glm::mat4(1.0f);
-//    //    glm::mat4 model = glm::mat4(1.0f);
-//    //    model = glm::rotate(model, glm::radians(-20.0f * 1), glm::vec3(1.0f, 0.5f, 0.2f));
-//    //    //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-//    //    
-//    //    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
-//    //    // pass transformation matrices to the shader
-//    //    ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-//    //    ourShader.setMat4("view", view);
-//    //    ourShader.setMat4("model", model);
-//    //    glBindVertexArray(VAO);
-//
-//    //    //glEnable(GL_CULL_FACE);
-//    //    //glCullFace(GL_BACK);
-//    //    glEnable(GL_DEPTH_TEST);
-//    //    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    //    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-//    //    //glDrawArrays(GL_TRIANGLES, 0, 36);
-//    //    glfwSwapBuffers(window);
-//    //    glfwPollEvents();
-//    //}
-//
-//    while (!glfwWindowShouldClose(window)) {
-//        processInput(window);
-//        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//        //glUseProgram(shaderProgram);
-//        ourShader.use();
-//        ourShader.setFloat("someUniform", 1.0f);
-//
-//        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-//        glm::mat4 projection = glm::mat4(1.0f);
-//
-//        //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-//        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
-//
-//        // pass transformation matrices to the shader
-//        ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-//        ourShader.setMat4("view", view);
-//
-//        glBindVertexArray(VAO);
-//        glEnable(GL_DEPTH_TEST);
-//        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//        //for (int i = 0; i < 18; ++i) {
-//        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//        glm::mat4 model = glm::mat4(1.0f);
-//        float angle = 20.0f * 3;
-//        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.5f, 0.2f));
-//        ourShader.setMat4("model", model);
-//        glBindVertexArray(VAO);
-//        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-//        //}
-//
-//        //glEnable(GL_CULL_FACE);
-//        //glCullFace(GL_BACK);
-//
-//
-//
-//        //glDrawArrays(GL_TRIANGLES, 0, 36);
-//        glfwSwapBuffers(window);
-//        glfwPollEvents();
-//    }
-//
-//    string savepath = "figs/cylinder_norm111_diff_color_ploygon.png";
-//    bool will_save = false;
-//    if (will_save)
-//        saveImage((char*)savepath.c_str(), window);
-//
-//    glDeleteVertexArrays(1, &VAO);
-//    glDeleteBuffers(1, &VBO);
-//    glDeleteBuffers(1, &EBO);
-//    //glDeleteProgram(shaderProgram);
-//
-//    glfwTerminate();
-//}
+
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCREEN_WIDTH = 800;
+const unsigned int SCREEN_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
+float lastX = SCREEN_WIDTH / 2.0f;
+float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
@@ -577,12 +380,18 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
+void saveImage(char* filepath, GLFWwindow* w);
+
+void generateCubicData(vector<float>& Vertices, vector<int>& Indices);
+void generateSphereData(vector<float>& Vertices, vector<int>& Indices);
+
+int draw_shape();
 int draw_cubic();
 
 int main()
 {
     int flag = draw_cubic();
-    return 0;
+    return flag;
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -639,7 +448,111 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.ProcessMouseScroll(yoffset);
 }
 
-int draw_cubic() {
+void saveImage(char* filepath, GLFWwindow* w) {
+    //ref: https://lencerf.github.io/post/2019-09-21-save-the-opengl-rendering-to-image-file/
+    int width, height;
+    glfwGetFramebufferSize(w, &width, &height);
+    GLsizei nrChannels = 3;
+    GLsizei stride = nrChannels * width;
+    stride += (stride % 4) ? (4 - stride % 4) : 0;
+    GLsizei bufferSize = stride * height;
+    std::vector<char> buffer(bufferSize);
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer.data());
+    stbi_flip_vertically_on_write(true);
+    stbi_write_png(filepath, width, height, nrChannels, buffer.data(), stride);
+}
+
+void generateCubicData(vector<float>& Vertices, vector<int>& Indices) {
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    };
+    for (int i = 0; i < 6 * 6 * 6; ++i)
+        Vertices.push_back(vertices[i]);
+    for (int i = 0; i < 6 * 6; ++i)
+        Indices.push_back(i);
+}
+
+void generateSphereData(vector<float>& Vertices, vector<int>& Indices) {
+    const float RADIUS = 0.8;
+    const int INTERVALS = 50;
+    const float ANGLE_INTERVAL = 2.0 * PI / INTERVALS;
+    int index_point = 0;
+    for (int i = 0; i <= INTERVALS; ++i) {
+        for (int j = 0; j <= INTERVALS; ++j) {
+            float theta = i * 1.0 * ANGLE_INTERVAL;
+            float alpha = j * 1.0 * ANGLE_INTERVAL;
+            float x = RADIUS * cos(alpha) * cos(theta);
+            float y = RADIUS * cos(alpha) * sin(theta);
+            float z = RADIUS * sin(alpha);
+            //cout << x << " " << y << " " << z << endl;
+
+            Vertices.push_back(x);
+            Vertices.push_back(y);
+            Vertices.push_back(z);
+            float nx = x / RADIUS;
+            float ny = y / RADIUS;
+            float nz = z / RADIUS;
+            Vertices.push_back(nx);
+            Vertices.push_back(ny);
+            Vertices.push_back(nz);
+
+            //CylinderIndices.push_back(index_point++);
+            //cout << index_point;
+            if (i != INTERVALS && j != INTERVALS) {
+                Indices.push_back(i * (INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+                Indices.push_back(i * (INTERVALS + 1) + j);
+                Indices.push_back((i + 1) * (INTERVALS + 1) + j + 1);
+                Indices.push_back(i * (INTERVALS + 1) + j + 1);
+            }
+        }
+    }
+}
+
+int draw_shape() {
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -653,7 +566,7 @@ int draw_cubic() {
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "drawn_by_tiankai", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -730,15 +643,27 @@ int draw_cubic() {
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
+
+    vector<float> Vertices;
+    vector<int> Indices;
+
+    generateCubicData(Vertices, Indices);
+    // generateSphereData(Vertices, Indices);
+
     // first, configure the cube's VAO (and VBO)
-    unsigned int VBO, cubeVAO;
+    unsigned int VBO, cubeVAO, EBO;
     glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glGenBuffers(1, &EBO);
 
     glBindVertexArray(cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), &Vertices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(int), &Indices[0], GL_STATIC_DRAW);
+
+    
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -746,6 +671,9 @@ int draw_cubic() {
     // normal attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindVertexArray(0);
 
 
     // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
@@ -757,6 +685,8 @@ int draw_cubic() {
     // note that we update the lamp's position attribute's stride to reflect the updated buffer data
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    // cout << Vertices.size() << " " << Indices.size() << endl;
 
 
     // render loop
@@ -786,7 +716,7 @@ int draw_cubic() {
         lightingShader.setVec3("viewPos", camera.Position);
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
@@ -797,20 +727,21 @@ int draw_cubic() {
 
         // render the cube
         glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
 
         // also draw the lamp object
-        lightCubeShader.use();
-        lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        lightCubeShader.setMat4("model", model);
+        //lightCubeShader.use();
+        //lightCubeShader.setMat4("projection", projection);
+        //lightCubeShader.setMat4("view", view);
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, lightPos);
+        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        //lightCubeShader.setMat4("model", model);
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(lightCubeVAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -824,8 +755,194 @@ int draw_cubic() {
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &lightCubeVAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
+    glfwTerminate();
+}
+
+int draw_cubic() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Draw Cylinder", NULL, NULL);
+    if (window == NULL) {
+        cout << "Fail to create the window." << endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    //glViewport(0, 0, 800, 600);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        cout << "Fail to initialize GLAD" << endl;
+        return -1;
+    }
+
+    //vertex shader
+    //int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    //glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    //glCompileShader(vertexShader);
+    int success;
+    char infoLog[512];
+    //glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    //if (!success)
+    //{
+    //    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    //}
+
+
+    //fragment shader
+    //int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    //glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    //glCompileShader(fragmentShader);
+    //glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    //if (!success)
+    //{
+    //    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    //}
+
+    //int shaderProgram = glCreateProgram();
+    //glAttachShader(shaderProgram, vertexShader);
+    //glAttachShader(shaderProgram, fragmentShader);
+    //glLinkProgram(shaderProgram);
+    //glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    //if (!success) {
+    //    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    //}
+
+    //glDeleteShader(vertexShader);
+    //glDeleteShader(fragmentShader);
+
+    vector<float> Vertices;
+    vector<int> Indices;
+
+    // generateCylinderData(Vertices, Indices);
+    // generateSphereData(Vertices, Indices);
+    // generateTriangleData(Vertices, Indices);
+    generateCubicData(Vertices, Indices);
+
+
+    unsigned int VAO, VBO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), &Vertices[0], GL_STATIC_DRAW); //cylinder
+    //glBufferData(GL_ARRAY_BUFFER, SphereVertices.size() * sizeof(float), &SphereVertices[0], GL_STATIC_DRAW); //sphere
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //triangle
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(int), &Indices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, SphereIndices.size() * sizeof(int), &SphereIndices[0], GL_STATIC_DRAW); //sphere
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); //triangle
+
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    Shader ourShader("myShader/perShader.vs", "myShader/shader.fs");
+
+    //while (!glfwWindowShouldClose(window)) {
+    //    processInput(window);
+    //    glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //    //glUseProgram(shaderProgram);
+    //    ourShader.use();
+    //    ourShader.setFloat("someUniform", 1.0f);
+    //    
+    //    glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    //    glm::mat4 projection = glm::mat4(1.0f);
+    //    glm::mat4 model = glm::mat4(1.0f);
+    //    model = glm::rotate(model, glm::radians(-20.0f * 1), glm::vec3(1.0f, 0.5f, 0.2f));
+    //    //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    //    
+    //    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
+    //    // pass transformation matrices to the shader
+    //    ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+    //    ourShader.setMat4("view", view);
+    //    ourShader.setMat4("model", model);
+    //    glBindVertexArray(VAO);
+
+    //    //glEnable(GL_CULL_FACE);
+    //    //glCullFace(GL_BACK);
+    //    glEnable(GL_DEPTH_TEST);
+    //    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    //    //glDrawArrays(GL_TRIANGLES, 0, 36);
+    //    glfwSwapBuffers(window);
+    //    glfwPollEvents();
+    //}
+
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //glUseProgram(shaderProgram);
+        ourShader.use();
+        ourShader.setFloat("someUniform", 1.0f);
+
+        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        glm::mat4 projection = glm::mat4(1.0f);
+
+        //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
+
+        // pass transformation matrices to the shader
+        ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+        ourShader.setMat4("view", view);
+
+        glBindVertexArray(VAO);
+        glEnable(GL_DEPTH_TEST);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //for (int i = 0; i < 18; ++i) {
+        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glm::mat4 model = glm::mat4(1.0f);
+        float angle = 20.0f * 3;
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.5f, 0.2f));
+        ourShader.setMat4("model", model);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        //}
+
+        //glEnable(GL_CULL_FACE);
+        //glCullFace(GL_BACK);
+
+
+
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    string savepath = "figs/cylinder_norm111_diff_color_ploygon.png";
+    bool will_save = false;
+    if (will_save)
+        saveImage((char*)savepath.c_str(), window);
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    //glDeleteProgram(shaderProgram);
+
     glfwTerminate();
 }
