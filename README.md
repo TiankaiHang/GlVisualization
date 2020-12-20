@@ -14,15 +14,15 @@ GLAD: https://glad.dav1d.de/
 
 500*500 vertices
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball.png" style="zoom:20%"/>
 
 500*500 vertices
 
-<img width=240 height=180 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball1.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball1.png" style="zoom:20%"/>
 
 50*50 vertices
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball2.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball2.png" style="zoom:20%"/>
 
 #### Cylinder
 
@@ -66,13 +66,13 @@ float ROTATE_ANGLE = 60.0 * PI / 180.0;
 vector<float> OFFSET = { 0.0, 0.0, 0.0 };
 ```
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111.png" style="zoom:20%"/>
 
 with different colors illustrating
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111_diff_color.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111_diff_color.png" style="zoom:20%"/>
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111_diff_color_ploygon.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_norm111_diff_color_ploygon.png" style="zoom:20%"/>
 
 ## 具体实验内容
 
