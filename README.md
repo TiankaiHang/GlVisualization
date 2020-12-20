@@ -18,7 +18,7 @@ GLAD: https://glad.dav1d.de/
 
 500*500 vertices
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball1.png" style="zoom:20%"/>
+<img width=240 height=180 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/ball1.png" style="zoom:20%"/>
 
 50*50 vertices
 
