@@ -45,7 +45,7 @@ float ROTATE_ANGLE = 60.0 * PI / 180.0;
 vector<float> OFFSET = { 0.0, 0.0, 0.0 };
 ```
 
-<img src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_60.png" style="zoom:20%"/>
+<img width=240 height=240 src="https://github.com/TiankaiHang/GlVisualization/blob/master/GlVisualization/figs/cylinder_60.png" style="zoom:20%"/>
 
 ```c
 const float CYLINDER_RADIUS = 0.5;
