@@ -28,5 +28,9 @@ https://web.cs.wpi.edu/~matt/courses/cs563/talks/powwie/p1/ray-cast.htm
 
 https://viscircle.de/guide-for-beginners-what-is-volume-ray-casting/?lang=en
 
+[Matlab MIP](https://blog.csdn.net/xsz591541060/article/details/92792627)
+
+
+
 
 
