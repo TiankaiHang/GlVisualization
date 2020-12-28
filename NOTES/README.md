@@ -17,7 +17,7 @@ https://blog.csdn.net/HW140701/article/details/53243733
 ## 体绘制三个算法
 
 - SSD (shaded surface display ?) 表面光线
-- mid (maximum intensity projection ?) 最大值
+- mip (maximum intensity projection ?) 最大值
 - drr (Digital Reconstruction Radiography ?)平均值
 
 
