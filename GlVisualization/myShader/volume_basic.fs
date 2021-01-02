@@ -32,7 +32,7 @@ void main(void)
 	vec3 trans = first;
 	vec3 rayStep = direction * h;
 
-	for(float t =0; t<=D; t += h){
+	for(float t = 0; t <= D; t += h){
 		
 		//Sample in the scalar field and the transfer function
 		float scalar = texture(volume, trans).x;
