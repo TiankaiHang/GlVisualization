@@ -31,6 +31,14 @@ bool inBall(Dtype center_x, Dtype center_y, Dtype center_z, Dtype radius,
 		(z - center_z) * (z - center_z) > radius * radius ? false : true;
 }
 
+template<typename Dtype>
+bool inCylinder(Dtype center_x, Dtype center_y, Dtype center_z, Dtype radius,
+				Dtype length, Dtype x, Dtype y, Dtype z) {
+	bool result = ((x - center_x) * (x - center_x) + (y - center_y) * (y - center_y) <=
+		radius * radius) && (abs(z - center_z) <= length / 2);
+	return result;
+}
+
 class Volume {
 private:
 	int volume_h;
