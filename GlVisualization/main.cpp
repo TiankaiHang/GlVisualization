@@ -21,6 +21,7 @@
 
 #include "shader.h"
 #include "camera.h"
+#include "volume.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -69,7 +70,7 @@ int draw_cubic();
 
 
 // ====================================================================
-//                        main function
+//               \\       main function       //
 // ====================================================================
 int main()
 {

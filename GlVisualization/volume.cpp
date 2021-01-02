@@ -7,6 +7,7 @@ Volume::Volume()
 
 Volume::~Volume()
 {
+	this->_data.clear();
 }
 
 glm::vec3 Volume::getVoxelSize()
@@ -42,4 +43,14 @@ void Volume::Init()
 			}
 		}
 	}
+}
+
+void Volume::LoadFromFlie(const char* filename, int w, int h, int d)
+{
+
+}
+
+vector<int> Volume::getData()
+{
+	return vector<int>(this->_data);
 }

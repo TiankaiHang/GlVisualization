@@ -55,6 +55,7 @@ public:
 
 	void Init();
 	void LoadFromFlie(const char* filename, int w, int h, int d);
+	vector<int> getData();
 };
 
 #endif // _VOLUME_H_

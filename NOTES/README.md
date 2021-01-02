@@ -14,6 +14,8 @@ volume rendering
 
 https://blog.csdn.net/HW140701/article/details/53243733
 
+https://developer.nvidia.com/sites/all/modules/custom/gpugems/books/GPUGems/gpugems_ch39.html
+
 ## 体绘制三个算法
 
 - SSD (shaded surface display ?) 表面光线
