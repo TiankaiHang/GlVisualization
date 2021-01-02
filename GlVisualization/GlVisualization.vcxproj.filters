@@ -22,6 +22,9 @@
     <ClCompile Include="main_for_mu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="volume.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image_write.h">
@@ -33,6 +36,9 @@
     <ClInclude Include="camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="volume.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="myShader\shader.fs" />
@@ -42,5 +48,6 @@
     <None Include="myShader\basic_lightning.vs" />
     <None Include="myShader\cubic_lightning.fs" />
     <None Include="myShader\cubic_lightning.vs" />
+    <None Include="myShader\volume_basic.fs" />
   </ItemGroup>
 </Project>

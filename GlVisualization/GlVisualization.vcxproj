@@ -149,11 +149,13 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_for_mu.cpp" />
+    <ClCompile Include="volume.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="stb_image_write.h" />
+    <ClInclude Include="volume.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="myShader\basic_lightning.fs" />
@@ -163,6 +165,7 @@
     <None Include="myShader\perShader.vs" />
     <None Include="myShader\shader.fs" />
     <None Include="myShader\shader.vs" />
+    <None Include="myShader\volume_basic.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
