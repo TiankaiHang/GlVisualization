@@ -24,6 +24,11 @@ void Volume::Init()
 	int totalSize = this->volume_d * this->volume_h * this->volume_w;
 	this->_data.resize(totalSize);
 
+	glm::vec3 center(this->volume_w / 2, this->volume_h / 2, this->volume_d / 2);
+	int radius_ball = 100;
+	int radius_cylinder = 50;
+	int length_cylinder = 2 * int(sqrtf(radius_ball * radius_ball - radius_cylinder * radius_cylinder));
+
 	for (int i = 0; i < this->volume_w; ++i) {
 		for (int j = 0; j < this->volume_h; ++j) {
 			for (int k = 0; k < this->volume_d; ++k) {
