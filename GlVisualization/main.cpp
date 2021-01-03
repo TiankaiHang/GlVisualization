@@ -667,7 +667,7 @@ int VolumeRendering() {
     // build and compile our shader zprogram
     // ------------------------------------
     Shader lightingShader("myShader/basic_lightning.vs", "myShader/basic_lightning.fs");
-    Shader lightCubeShader("myShader/cubic_lightning.vs", "myShader/cubic_lightning.fs");
+    Shader lightCubeShader("myShader/cubic_lightning.vs", "myShader/volume_basic.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
