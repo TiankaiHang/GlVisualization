@@ -682,6 +682,24 @@ int VolumeRendering() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    //texture
+    Volume myVolume;
+    vector<int> data = myVolume.getData();
+    GLuint g_volTexObj;
+    glGenTextures(1, &g_volTexObj);
+    glBindTexture(GL_TEXTURE_3D, g_volTexObj);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    glm::vec3 voxelsize = myVolume.getVoxelSize();
+    //glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,data);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
+    cout << "volume texture created" << endl;
+
     Shader ourShader("myShader/perShader.vs", "myShader/shader.fs");
 
     while (!glfwWindowShouldClose(window)) {
