@@ -1,8 +1,11 @@
 // ref: https://github.com/franjaviersans/VRGLSL/blob/master/VRGLSL/shaders/basic.frag
 #version 330
-layout(binding = 1) uniform sampler2D lastHit;
-layout(binding = 2) uniform sampler1D transferFunction;
-layout(binding = 3) uniform sampler3D volume;
+// layout(binding = 1) uniform sampler2D lastHit;
+// layout(binding = 2) uniform sampler1D transferFunction;
+// layout(binding = 3) uniform sampler3D volume;
+uniform sampler2D lastHit;
+uniform sampler1D transferFunction;
+uniform sampler3D volume;
 uniform float h = 0.01f;
 
 //in vec3 vTextureCoord;

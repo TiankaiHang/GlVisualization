@@ -67,6 +67,7 @@ void generateCubic_with_color(vector<float>& Vertices, vector<int>& Indices);
 
 int draw_shape();
 int draw_cubic();
+int VolumeRendering();
 
 
 // ====================================================================
@@ -74,7 +75,7 @@ int draw_cubic();
 // ====================================================================
 int main()
 {
-    int flag = draw_shape();
+    int flag = VolumeRendering();
     return flag;
 }
 // ====================================================================
@@ -621,7 +622,6 @@ int draw_cubic() {
     glfwTerminate();
 }
 
-
 int VolumeRendering() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -700,7 +700,7 @@ int VolumeRendering() {
     glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
     cout << "volume texture created" << endl;
 
-    Shader ourShader("myShader/perShader.vs", "myShader/shader.fs");
+    Shader ourShader("myShader/perShader.vs", "myShader/volume_basic.fs");
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
