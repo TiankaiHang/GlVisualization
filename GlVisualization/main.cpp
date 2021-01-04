@@ -69,6 +69,9 @@ int draw_shape();
 int draw_cubic();
 int VolumeRendering();
 
+GLuint initTFF1DTex(const char* filename);
+GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight);
+
 
 // ====================================================================
 //               \\       main function       //
@@ -714,6 +717,9 @@ int VolumeRendering() {
     //glEnableVertexAttribArray(0);
 
     //texture
+
+    GLuint g_tffTexObj = initTFF1DTex("used_data/tff.dat");
+
     Volume myVolume;
     vector<int> data = myVolume.getData();
     GLuint g_volTexObj;
@@ -731,6 +737,11 @@ int VolumeRendering() {
     glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
     cout << "volume texture created !" << endl;
 
+
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_1D, g_volTexObj);
+    volumeShader.setInt("VolumeTex", 2);
 
     // cout << Vertices.size() << " " << Indices.size() << endl;
 
@@ -790,6 +801,10 @@ int VolumeRendering() {
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_1D, g_volTexObj);
+        volumeShader.setInt("VolumeTex", 2);
+
         // also draw the lamp object
         //lightCubeShader.use();
         //lightCubeShader.setMat4("projection", projection);
@@ -819,6 +834,58 @@ int VolumeRendering() {
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();
+}
+
+GLuint initTFF1DTex(const char* filename)
+{
+    // read in the user defined data of transfer function
+    ifstream inFile(filename, ifstream::in);
+    if (!inFile)
+    {
+        cerr << "Error openning file: " << filename << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    const int MAX_CNT = 10000;
+    GLubyte* tff = (GLubyte*)calloc(MAX_CNT, sizeof(GLubyte));
+    inFile.read(reinterpret_cast<char*>(tff), MAX_CNT);
+    if (inFile.eof())
+    {
+        size_t bytecnt = inFile.gcount();
+        *(tff + bytecnt) = '\0';
+        cout << "bytecnt " << bytecnt << endl;
+    }
+    else if (inFile.fail())
+    {
+        cout << filename << "read failed " << endl;
+    }
+    else
+    {
+        cout << filename << "is too large" << endl;
+    }
+    GLuint tff1DTex;
+    glGenTextures(1, &tff1DTex);
+    glBindTexture(GL_TEXTURE_1D, tff1DTex);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA8, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, tff);
+    free(tff);
+    return tff1DTex;
+}
+
+GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight)
+{
+    GLuint backFace2DTex;
+    glGenTextures(1, &backFace2DTex);
+    glBindTexture(GL_TEXTURE_2D, backFace2DTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bfTexWidth, bfTexHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+    return backFace2DTex;
 }
 
 // old version code

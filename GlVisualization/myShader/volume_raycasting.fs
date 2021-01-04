@@ -35,7 +35,7 @@ void main()
     vec3 voxelCoord = EntryPoint;
     vec4 colorAcum = vec4(0.0); // The dest color
     float alphaAcum = 0.0;                // The  dest alpha for blending
-    /* 定义颜色查找的坐标 */
+    // 定义颜色查找的坐标
     float intensity;
     float lengthAcum = 0.0;
     vec4 colorSample; // The src color 
