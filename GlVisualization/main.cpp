@@ -717,9 +717,11 @@ int VolumeRendering() {
     //glEnableVertexAttribArray(0);
 
     //texture
-
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
     GLuint g_tffTexObj = initTFF1DTex("used_data/tff.dat");
-
+    GLuint g_bfTexObj = initFace2DTex(width, height);
+    
     Volume myVolume;
     vector<int> data = myVolume.getData();
     GLuint g_volTexObj;
@@ -801,9 +803,16 @@ int VolumeRendering() {
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_1D, g_tffTexObj);
+        volumeShader.setInt("TransferFunc", 0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, g_bfTexObj);
+        volumeShader.setInt("ExitPoints", 1);
         glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_1D, g_volTexObj);
+        glBindTexture(GL_TEXTURE_3D, g_volTexObj);
         volumeShader.setInt("VolumeTex", 2);
+        volumeShader.setVec2("screenSizeLoc", glm::vec2((float)width, (float)height));
 
         // also draw the lamp object
         //lightCubeShader.use();
