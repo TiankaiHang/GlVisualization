@@ -46,6 +46,12 @@ public:
         {
             std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
         }
+        //std::cout << "============= Vertex shader =============" << std::endl <<
+        //    vertexCode << std::endl << 
+        //    "==========================================" << std::endl;
+        //std::cout << "============= Fragment shader =============" << std::endl <<
+        //    fragmentCode << std::endl <<
+        //    "==========================================" << std::endl;
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
         // 2. compile shaders

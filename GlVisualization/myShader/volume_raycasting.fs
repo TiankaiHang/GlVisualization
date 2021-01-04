@@ -76,4 +76,4 @@ void main()
     // FragColor = vec4(EntryPoint, 1.0);
     // FragColor = vec4(exitPoint, 1.0);
    
-}
+};
