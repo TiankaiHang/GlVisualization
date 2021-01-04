@@ -166,6 +166,8 @@
     <None Include="myShader\shader.fs" />
     <None Include="myShader\shader.vs" />
     <None Include="myShader\volume_basic.fs" />
+    <None Include="myShader\volume_raycasting.fs" />
+    <None Include="myShader\volume_raycasting.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

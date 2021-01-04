@@ -49,5 +49,7 @@
     <None Include="myShader\cubic_lightning.fs" />
     <None Include="myShader\cubic_lightning.vs" />
     <None Include="myShader\volume_basic.fs" />
+    <None Include="myShader\volume_raycasting.fs" />
+    <None Include="myShader\volume_raycasting.vs" />
   </ItemGroup>
 </Project>

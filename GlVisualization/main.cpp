@@ -666,8 +666,10 @@ int VolumeRendering() {
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader lightingShader("myShader/basic_lightning.vs", "myShader/basic_lightning.fs");
-    Shader lightCubeShader("myShader/cubic_lightning.vs", "myShader/volume_basic.fs");
+    //Shader lightingShader("myShader/basic_lightning.vs", "myShader/basic_lightning.fs");
+    //Shader lightCubeShader("myShader/cubic_lightning.vs", "myShader/volume_basic.fs");
+
+    Shader volumeShader("myShader/volume_raycasting.vs", "myShader/volume_raycasting.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -752,28 +754,41 @@ int VolumeRendering() {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // be sure to activate shader when setting uniforms/drawing objects
-        lightingShader.use();
-        lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        lightingShader.setVec3("lightPos", lightPos);
-        lightingShader.setVec3("viewPos", camera.Position);
+        //// be sure to activate shader when setting uniforms/drawing objects
+        //lightingShader.use();
+        //lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        //lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        //lightingShader.setVec3("lightPos", lightPos);
+        //lightingShader.setVec3("viewPos", camera.Position);
 
-        // view/projection transformations
+        //// view/projection transformations
+        //glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        //glm::mat4 view = camera.GetViewMatrix();
+        //lightingShader.setMat4("projection", projection);
+        //lightingShader.setMat4("view", view);
+
+        //// world transformation
+        //glm::mat4 model = glm::mat4(1.0f);
+        //lightingShader.setMat4("model", model);
+
+        //// render the cube
+        //glBindVertexArray(cubeVAO);
+        ////glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
+        volumeShader.use();
+        volumeShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        volumeShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        volumeShader.setVec3("lightPos", lightPos);
+        volumeShader.setVec3("viewPos", camera.Position);
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
-
-        // world transformation
+        volumeShader.setMat4("projection", projection);
+        volumeShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
-        lightingShader.setMat4("model", model);
-
-        // render the cube
+        volumeShader.setMat4("model", model);
         glBindVertexArray(cubeVAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-
 
         // also draw the lamp object
         //lightCubeShader.use();
