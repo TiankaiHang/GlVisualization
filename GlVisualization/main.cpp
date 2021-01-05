@@ -71,6 +71,7 @@ int VolumeRendering();
 
 GLuint initTFF1DTex(const char* filename);
 GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight);
+GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d);
 
 
 // ====================================================================
@@ -79,6 +80,7 @@ GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight);
 int main()
 {
     int flag = VolumeRendering();
+    // int flag = initVol3DTex("used_data/head256.raw", 256, 256, 225);
     return flag;
 }
 // ====================================================================
@@ -721,7 +723,7 @@ int VolumeRendering() {
     glfwGetFramebufferSize(window, &width, &height);
     GLuint g_tffTexObj = initTFF1DTex("used_data/tff.dat");
     GLuint g_bfTexObj = initFace2DTex(width, height);
-    
+    // GLuint g_volTexObj = initVol3DTex("used_data/head256.raw", 256, 256, 225);
     Volume myVolume;
     vector<int> data = myVolume.getData();
     GLuint g_volTexObj;
@@ -891,6 +893,55 @@ GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bfTexWidth, bfTexHeight, 0, GL_RGBA, GL_FLOAT, NULL);
     return backFace2DTex;
+}
+
+GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
+{
+
+    FILE* fp;
+    size_t size = w * h * d;
+    GLubyte* data = new GLubyte[size];			  // 8bit
+    if (!(fp = fopen(filename, "rb")))
+    {
+        cout << "Error: opening .raw file failed" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        cout << "OK: open .raw file successed" << endl;
+    }
+    if (fread(data, sizeof(char), size, fp) != size)
+    {
+        cout << "Error: read .raw file failed" << endl;
+        exit(1);
+    }
+    else
+    {
+        cout << "OK: read .raw file successed" << endl;
+    }
+    fclose(fp);
+
+    //cout << "\n The data in head.raw: \n";
+    //for (int _i = 0; _i < w * h * d; ++_i)
+    //    cout << (int)data[_i] << " ";
+    //cout << "Print Finished ..." << endl;
+
+    GLuint g_volTexObj;
+    glGenTextures(1, &g_volTexObj);
+    // bind 3D texture target
+    glBindTexture(GL_TEXTURE_3D, g_volTexObj);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    // pixel transfer happens here from client to OpenGL server
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, w, h, d, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
+    delete[]data;
+    cout << "volume texture created" << endl;
+    return g_volTexObj;
 }
 
 // old version code

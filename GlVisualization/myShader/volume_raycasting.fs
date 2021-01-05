@@ -43,10 +43,13 @@ void main()
     // backgroundColor
     vec4 bgColor = vec4(1.0, 1.0, 1.0, 0.0);
  
+    FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
     for(int i = 0; i < 1600; i++)
     {
     	// 获得体数据中的标量值scaler value
     	intensity =  texture(VolumeTex, voxelCoord).x;
+        if(intensity <= 0)
+            FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
     	// 查找传输函数中映射后的值
     	// 依赖性纹理读取  
     	colorSample = texture(TransferFunc, intensity) * 1.0f / 200.0f;
@@ -74,6 +77,7 @@ void main()
     // FragColor = colorAcum;
     // for test
     // FragColor = vec4(EntryPoint, 1.0);
-    FragColor = vec4(vec3(colorSample), 1.0);
-   
+    // FragColor = vec4(vec3(colorSample), 1.0);
+    // FragColor = vec4(ExitPointCoord);
+    FragColor = vec4(exitPoint, 1.0f);
 };
