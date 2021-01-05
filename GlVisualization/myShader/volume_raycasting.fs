@@ -41,7 +41,7 @@ void main()
     vec4 colorSample; // The src color 
     float alphaSample; // The src alpha
     // backgroundColor
-    vec4 bgColor = vec4(0.0, 1.0, 1.0, 0.0);
+    vec4 bgColor = vec4(1.0, 1.0, 1.0, 0.0);
  
     for(int i = 0; i < 1600; i++)
     {
@@ -49,7 +49,7 @@ void main()
     	intensity =  texture(VolumeTex, voxelCoord).x;
     	// 查找传输函数中映射后的值
     	// 依赖性纹理读取  
-    	colorSample = texture(TransferFunc, intensity);
+    	colorSample = texture(TransferFunc, intensity) * 1.0f / 200.0f;
     	// modulate the value of colorSample.a
     	// front-to-back integration
     	if (colorSample.a > 0.0) {
@@ -71,9 +71,9 @@ void main()
     	    break;
     	}
     }
-    FragColor = colorAcum;
+    // FragColor = colorAcum;
     // for test
     // FragColor = vec4(EntryPoint, 1.0);
-    // FragColor = vec4(exitPoint, 1.0);
+    FragColor = vec4(vec3(colorSample), 1.0);
    
 };

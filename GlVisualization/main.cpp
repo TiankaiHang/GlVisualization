@@ -739,10 +739,6 @@ int VolumeRendering() {
     glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
     cout << "volume texture created !" << endl;
 
-
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_1D, g_volTexObj);
     volumeShader.setInt("VolumeTex", 2);
 
     // cout << Vertices.size() << " " << Indices.size() << endl;
