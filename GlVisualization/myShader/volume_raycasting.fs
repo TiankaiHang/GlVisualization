@@ -80,4 +80,6 @@ void main()
     // FragColor = vec4(vec3(colorSample), 1.0);
     // FragColor = vec4(ExitPointCoord); // have  color and color changes
     FragColor = vec4(exitPoint, 1.0f); //for debug, black
+    // FragColor = vec4(gl_FragCoord.xy/ScreenSize, 1.0f, 1.0f);
+    // FragColor = vec4(-dir, 1.0f);
 };

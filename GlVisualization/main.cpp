@@ -52,8 +52,9 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 // count for image savings
 int count_image = 0;
+GLuint g_frameBuffer;
 
-
+// defined functions
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -72,6 +73,9 @@ int VolumeRendering();
 GLuint initTFF1DTex(const char* filename);
 GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight);
 GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d);
+void initFrameBuffer(GLuint, GLuint, GLuint);
+void checkFramebufferStatus();
+
 
 
 // ====================================================================
@@ -670,6 +674,7 @@ int VolumeRendering() {
     //Shader lightCubeShader("myShader/cubic_lightning.vs", "myShader/volume_basic.fs");
 
     Shader volumeShader("myShader/volume_raycasting.vs", "myShader/volume_raycasting.fs");
+    Shader backShader("myShader/volume_backface.vs", "myShader/volume_backface.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -736,11 +741,11 @@ int VolumeRendering() {
     glTexImage3D(GL_TEXTURE_3D, 0, GL_RED, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_INT, &data[0]);
     cout << "volume texture created!" << endl;
 
-    volumeShader.setInt("VolumeTex", 2);
-
+    // volumeShader.setInt("VolumeTex", 2);
+    //initFrameBuffer(g_bfTexObj, width, height);
     // cout << Vertices.size() << " " << Indices.size() << endl;
 
-
+    //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -797,17 +802,22 @@ int VolumeRendering() {
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
         volumeShader.setVec2("ScreenSize", glm::vec2((float)width, (float)height));
-        //glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_1D, g_tffTexObj);
-        //volumeShader.setInt("TransferFunc", 0);
-        //glActiveTexture(GL_TEXTURE1);
-        //glBindTexture(GL_TEXTURE_2D, g_bfTexObj);
-        //volumeShader.setInt("ExitPoints", 1);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_1D, g_tffTexObj);
+        volumeShader.setInt("TransferFunc", 0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, g_bfTexObj);
+        volumeShader.setInt("ExitPoints", 1);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_3D, g_volTexObj);
         volumeShader.setInt("VolumeTex", 2);
         
-
+        backShader.use();
+        backShader.setMat4("projection", projection);
+        backShader.setMat4("view", view);
+        backShader.setMat4("model", model);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         // also draw the lamp object
         //lightCubeShader.use();
         //lightCubeShader.setMat4("projection", projection);
@@ -940,6 +950,33 @@ GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
     return g_volTexObj;
 }
 
+void initFrameBuffer(GLuint texObj, GLuint texWidth, GLuint texHeight)
+{
+    // create a depth buffer for our framebuffer
+    GLuint depthBuffer;
+    glGenRenderbuffers(1, &depthBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, texWidth, texHeight);
+
+    // attach the texture and the depth buffer to the framebuffer
+    glGenFramebuffers(1, &g_frameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, g_frameBuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texObj, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+    checkFramebufferStatus();
+    glEnable(GL_DEPTH_TEST);
+}
+
+void checkFramebufferStatus()
+{
+    GLenum complete = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    // cout << "I'm in checkFramebufferStatus() \n";
+    if (complete != GL_FRAMEBUFFER_COMPLETE)
+    {
+        cout << "framebuffer is not complete" << endl;
+        exit(EXIT_FAILURE);
+    }
+}
 // old version code
 //void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 //void processInput(GLFWwindow* window);

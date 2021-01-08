@@ -51,5 +51,7 @@
     <None Include="myShader\volume_basic.fs" />
     <None Include="myShader\volume_raycasting.fs" />
     <None Include="myShader\volume_raycasting.vs" />
+    <None Include="myShader\volume_backface.fs" />
+    <None Include="myShader\volume_backface.vs" />
   </ItemGroup>
 </Project>
