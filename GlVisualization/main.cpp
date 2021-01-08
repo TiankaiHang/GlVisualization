@@ -169,48 +169,43 @@ void saveImage(const char* filepath, GLFWwindow* w) {
 
 void generateCubicData(vector<float>& Vertices, vector<int>& Indices) {
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-    };
+        -0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  0.0f, -1.0f,//
+        -0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  0.0f,  1.0f,//
+        -0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f, -1.0f,  0.0f,  0.0f,//
+         0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  1.0f,  0.0f,  0.0f,//
+        -0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f,  0.5f + 0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f + 0.5f, -0.5f + 0.5f, -0.5f + 0.5f,  0.0f, -1.0f,  0.0f,//
+        -0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f + 0.5f,  0.5f + 0.5f,  0.5f + 0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f + 0.5f,  0.5f + 0.5f, -0.5f + 0.5f,  0.0f,  1.0f,  0.0f
+    };                                    
     for (int i = 0; i < 6 * 6 * 6; ++i)
         Vertices.push_back(vertices[i]);
     for (int i = 0; i < 6 * 6; ++i)
@@ -738,8 +733,8 @@ int VolumeRendering() {
 
     glm::vec3 voxelsize = myVolume.getVoxelSize();
     //glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,data);
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
-    cout << "volume texture created !" << endl;
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RED, voxelsize.x, voxelsize.y, voxelsize.z, 0, GL_RED, GL_INT, &data[0]);
+    cout << "volume texture created!" << endl;
 
     volumeShader.setInt("VolumeTex", 2);
 
@@ -801,16 +796,17 @@ int VolumeRendering() {
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_1D, g_tffTexObj);
-        volumeShader.setInt("TransferFunc", 0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, g_bfTexObj);
-        volumeShader.setInt("ExitPoints", 1);
+        volumeShader.setVec2("ScreenSize", glm::vec2((float)width, (float)height));
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_1D, g_tffTexObj);
+        //volumeShader.setInt("TransferFunc", 0);
+        //glActiveTexture(GL_TEXTURE1);
+        //glBindTexture(GL_TEXTURE_2D, g_bfTexObj);
+        //volumeShader.setInt("ExitPoints", 1);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_3D, g_volTexObj);
         volumeShader.setInt("VolumeTex", 2);
-        volumeShader.setVec2("screenSizeLoc", glm::vec2((float)width, (float)height));
+        
 
         // also draw the lamp object
         //lightCubeShader.use();

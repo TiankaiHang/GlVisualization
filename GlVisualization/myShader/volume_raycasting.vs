@@ -16,4 +16,4 @@ void main()
     EntryPoint = VerPos;
     gl_Position = projection * view * vec4(vec3(model * vec4(VerPos, 1.0)), 1.0);
     ExitPointCoord = gl_Position;  
-};
+}
