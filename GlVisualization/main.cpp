@@ -742,7 +742,7 @@ int VolumeRendering() {
     cout << "volume texture created!" << endl;
 
     // volumeShader.setInt("VolumeTex", 2);
-    //initFrameBuffer(g_bfTexObj, width, height);
+    // initFrameBuffer(g_bfTexObj, width, height);
     // cout << Vertices.size() << " " << Indices.size() << endl;
 
     //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
@@ -787,11 +787,12 @@ int VolumeRendering() {
         ////glDrawArrays(GL_TRIANGLES, 0, 36);
         //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
+
         volumeShader.use();
-        volumeShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        volumeShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        volumeShader.setVec3("lightPos", lightPos);
-        volumeShader.setVec3("viewPos", camera.Position);
+        //volumeShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        //volumeShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        //volumeShader.setVec3("lightPos", lightPos);
+        //volumeShader.setVec3("viewPos", camera.Position);
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         volumeShader.setMat4("projection", projection);
@@ -812,12 +813,14 @@ int VolumeRendering() {
         glBindTexture(GL_TEXTURE_3D, g_volTexObj);
         volumeShader.setInt("VolumeTex", 2);
         
-        backShader.use();
-        backShader.setMat4("projection", projection);
-        backShader.setMat4("view", view);
-        backShader.setMat4("model", model);
-        glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        //backShader.use();
+        //backShader.setMat4("projection", projection);
+        //backShader.setMat4("view", view);
+        //backShader.setMat4("model", model);
+        //glBindVertexArray(cubeVAO);
+        //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
+
         // also draw the lamp object
         //lightCubeShader.use();
         //lightCubeShader.setMat4("projection", projection);
