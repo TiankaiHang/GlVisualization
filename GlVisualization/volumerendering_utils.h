@@ -25,6 +25,8 @@
 #pragma comment(lib, "glfw3.lib")
 
 #define PI 3.14159265358979323846
+#define DRAW_CUBIC 0
+#define DRAW_SPHERE 1
 
 using namespace std;
 
@@ -60,6 +62,7 @@ void saveImage(const char* filepath, GLFWwindow* w);
 void generateCubicData(vector<float>& Vertices, vector<int>& Indices);
 void generateSphereData(vector<float>& Vertices, vector<int>& Indices);
 void generateCubic_with_color(vector<float>& Vertices, vector<int>& Indices);
+void generateCubic_for_vr(vector<float>& Vertices, vector<int>& Indices);
 
 GLuint initTFF1DTex(const char* filename);
 GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight);
@@ -67,6 +70,9 @@ GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d);
 
 void initFrameBuffer(GLuint, GLuint, GLuint);
 void checkFramebufferStatus();
+
+int draw_shape(int shape_flag);
+int draw_cubic();
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -132,6 +138,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.ProcessMouseScroll(yoffset);
 }
 
+// save image
+// ----------------------------------------------------------------------
 void saveImage(const char* filepath, GLFWwindow* w) {
     //ref: https://lencerf.github.io/post/2019-09-21-save-the-opengl-rendering-to-image-file/
     int width, height;
@@ -148,6 +156,8 @@ void saveImage(const char* filepath, GLFWwindow* w) {
     stbi_write_png(filepath, width, height, nrChannels, buffer.data(), stride);
 }
 
+// generate cubic data
+// ----------------------------------------------------------------------
 void generateCubicData(vector<float>& Vertices, vector<int>& Indices) {
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -252,6 +262,38 @@ void generateCubic_with_color(vector<float>& Vertices, vector<int>& Indices) {
         Vertices.push_back(vertices[i]);
     for (int j = 0; j < 36; ++j)
         Indices.push_back(indices[j]);
+}
+
+void generateCubic_for_vr(vector<float>& Vertices, vector<int>& Indices) {
+    GLfloat vertices[24] = {
+    0.0, 0.0, 0.0,
+    0.0, 0.0, 1.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 1.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 1.0,
+    1.0, 1.0, 0.0,
+    1.0, 1.0, 1.0
+    };
+    GLuint indices[36] = {
+    1,5,7,
+    7,3,1,
+    0,2,6,
+    6,4,0,
+    0,1,3,
+    3,2,0,
+    7,5,4,
+    4,6,7,
+    2,3,7,
+    7,6,2,
+    1,0,4,
+    4,5,1
+    };
+
+    for (int i = 0; i < 24; ++i)
+        Vertices.push_back(vertices[i]);
+    for (int i = 0; i < 36; ++i)
+        Indices.push_back(indices[i]);
 }
 
 GLuint initTFF1DTex(const char* filename)
@@ -381,6 +423,358 @@ void checkFramebufferStatus()
         cout << "framebuffer is not complete" << endl;
         exit(EXIT_FAILURE);
     }
+}
+
+int draw_shape(int shape_flag) {
+    // glfw: initialize and configure
+    // ------------------------------
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+    // glfw window creation
+    // --------------------
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "drawn_by_tiankai", NULL, NULL);
+    if (window == NULL)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    // configure global opengl state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
+
+    // build and compile our shader zprogram
+    // ------------------------------------
+    Shader lightingShader("myShader/basic_lightning.vs", "myShader/basic_lightning.fs");
+    Shader lightCubeShader("myShader/cubic_lightning.vs", "myShader/cubic_lightning.fs");
+
+    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // ------------------------------------------------------------------
+    vector<float> Vertices;
+    vector<int> Indices;
+
+    if (shape_flag == DRAW_CUBIC)
+        generateCubicData(Vertices, Indices);
+    else if (shape_flag == DRAW_SPHERE)
+        generateSphereData(Vertices, Indices);
+    else
+        throw "No implementations yet!";
+    // first, configure the cube's VAO (and VBO)
+    unsigned int VBO, cubeVAO, EBO;
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), &Vertices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(int), &Indices[0], GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindVertexArray(0);
+
+
+    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // note that we update the lamp's position attribute's stride to reflect the updated buffer data
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // cout << Vertices.size() << " " << Indices.size() << endl;
+
+
+    // render loop
+    // -----------
+    while (!glfwWindowShouldClose(window))
+    {
+        // per-frame time logic
+        // --------------------
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        // input
+        // -----
+        processInput(window);
+
+        // render
+        // ------
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // be sure to activate shader when setting uniforms/drawing objects
+        lightingShader.use();
+        lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        lightingShader.setVec3("lightPos", lightPos);
+        lightingShader.setVec3("viewPos", camera.Position);
+
+        // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        lightingShader.setMat4("projection", projection);
+        lightingShader.setMat4("view", view);
+
+        // world transformation
+        glm::mat4 model = glm::mat4(1.0f);
+        lightingShader.setMat4("model", model);
+
+        // render the cube
+        glBindVertexArray(cubeVAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
+
+        // also draw the lamp object
+        //lightCubeShader.use();
+        //lightCubeShader.setMat4("projection", projection);
+        //lightCubeShader.setMat4("view", view);
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, lightPos);
+        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        //lightCubeShader.setMat4("model", model);
+
+        //glBindVertexArray(lightCubeVAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // optional: de-allocate all resources once they've outlived their purpose:
+    // ------------------------------------------------------------------------
+    glDeleteVertexArrays(1, &cubeVAO);
+    glDeleteVertexArrays(1, &lightCubeVAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+}
+
+int draw_cubic() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Draw Cylinder", NULL, NULL);
+    if (window == NULL) {
+        cout << "Fail to create the window." << endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    //glViewport(0, 0, 800, 600);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        cout << "Fail to initialize GLAD" << endl;
+        return -1;
+    }
+
+    //vertex shader
+    //int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    //glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    //glCompileShader(vertexShader);
+    int success;
+    char infoLog[512];
+    //glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    //if (!success)
+    //{
+    //    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    //}
+
+
+    //fragment shader
+    //int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    //glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    //glCompileShader(fragmentShader);
+    //glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    //if (!success)
+    //{
+    //    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    //}
+
+    //int shaderProgram = glCreateProgram();
+    //glAttachShader(shaderProgram, vertexShader);
+    //glAttachShader(shaderProgram, fragmentShader);
+    //glLinkProgram(shaderProgram);
+    //glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    //if (!success) {
+    //    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    //}
+
+    //glDeleteShader(vertexShader);
+    //glDeleteShader(fragmentShader);
+
+    vector<float> Vertices;
+    vector<int> Indices;
+
+    // generateCylinderData(Vertices, Indices);
+    // generateSphereData(Vertices, Indices);
+    // generateTriangleData(Vertices, Indices);
+    generateCubic_with_color(Vertices, Indices);
+
+
+    unsigned int VAO, VBO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), &Vertices[0], GL_STATIC_DRAW); //cylinder
+    //glBufferData(GL_ARRAY_BUFFER, SphereVertices.size() * sizeof(float), &SphereVertices[0], GL_STATIC_DRAW); //sphere
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //triangle
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(int), &Indices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, SphereIndices.size() * sizeof(int), &SphereIndices[0], GL_STATIC_DRAW); //sphere
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); //triangle
+
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    Shader ourShader("myShader/perShader.vs", "myShader/shader.fs");
+
+    //while (!glfwWindowShouldClose(window)) {
+    //    processInput(window);
+    //    glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //    //glUseProgram(shaderProgram);
+    //    ourShader.use();
+    //    ourShader.setFloat("someUniform", 1.0f);
+    //    
+    //    glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    //    glm::mat4 projection = glm::mat4(1.0f);
+    //    glm::mat4 model = glm::mat4(1.0f);
+    //    model = glm::rotate(model, glm::radians(-20.0f * 1), glm::vec3(1.0f, 0.5f, 0.2f));
+    //    //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    //    
+    //    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
+    //    // pass transformation matrices to the shader
+    //    ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+    //    ourShader.setMat4("view", view);
+    //    ourShader.setMat4("model", model);
+    //    glBindVertexArray(VAO);
+
+    //    //glEnable(GL_CULL_FACE);
+    //    //glCullFace(GL_BACK);
+    //    glEnable(GL_DEPTH_TEST);
+    //    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    //    //glDrawArrays(GL_TRIANGLES, 0, 36);
+    //    glfwSwapBuffers(window);
+    //    glfwPollEvents();
+    //}
+
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //glUseProgram(shaderProgram);
+        ourShader.use();
+        ourShader.setFloat("someUniform", 1.0f);
+
+        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        glm::mat4 projection = glm::mat4(1.0f);
+
+        //projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -1.0f));
+
+        // pass transformation matrices to the shader
+        ourShader.setMat4("projection", projection); // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
+        ourShader.setMat4("view", view);
+
+        glBindVertexArray(VAO);
+        glEnable(GL_DEPTH_TEST);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //for (int i = 0; i < 18; ++i) {
+        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glm::mat4 model = glm::mat4(1.0f);
+        float angle = 20.0f * 3;
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.5f, 0.2f));
+        ourShader.setMat4("model", model);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        //}
+
+        //glEnable(GL_CULL_FACE);
+        //glCullFace(GL_BACK);
+
+
+
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    string savepath = "figs/cylinder_norm111_diff_color_ploygon.png";
+    bool will_save = false;
+    if (will_save)
+        saveImage((char*)savepath.c_str(), window);
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    //glDeleteProgram(shaderProgram);
+
+    glfwTerminate();
 }
 
 #endif // !VOLUME_RENDERING_UTILS
