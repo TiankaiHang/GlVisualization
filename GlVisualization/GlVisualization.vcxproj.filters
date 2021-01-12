@@ -39,6 +39,9 @@
     <ClInclude Include="volume.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="volumerendering_utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="myShader\shader.fs" />
