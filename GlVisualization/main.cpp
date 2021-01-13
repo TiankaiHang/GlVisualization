@@ -97,7 +97,7 @@ int VolumeRendering() {
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // normal attribute
+    // color attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
 
@@ -121,6 +121,7 @@ int VolumeRendering() {
     GLuint g_tffTexObj = initTFF1DTex("used_data/tff.dat");
     GLuint g_bfTexObj = initFace2DTex(width, height);
     GLuint g_volTexObj = initVol3DTex("used_data/head256.raw", 256, 256, 225);
+    //initFrameBuffer(g_bfTexObj, width, height);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
 
     //Volume myVolume;
@@ -158,26 +159,45 @@ int VolumeRendering() {
         // -----
         processInput(window);
 
+        // display
+        glEnable(GL_DEPTH_TEST);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
+        glViewport(0, 0, width, height);
+
+        backShader.use();
+
+
+
         // render
         // ------
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        volumeShader.use();
+        
         //volumeShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         //volumeShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         //volumeShader.setVec3("lightPos", lightPos);
         //volumeShader.setVec3("viewPos", camera.Position);
+
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        volumeShader.setMat4("projection", projection);
-        volumeShader.setMat4("view", view);
+        backShader.setMat4("projection", projection);
+        backShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
-        volumeShader.setMat4("model", model);
+        backShader.setMat4("model", model);
 
-
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        glDisable(GL_CULL_FACE);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, width, height);
+        volumeShader.use();
+        /*glCullFace(GL_BACK);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);*/
 
         volumeShader.setVec2("ScreenSize", glm::vec2((float)width, (float)height));
         glActiveTexture(GL_TEXTURE0);
@@ -190,6 +210,19 @@ int VolumeRendering() {
         glBindTexture(GL_TEXTURE_3D, g_volTexObj);
         volumeShader.setInt("VolumeTex", 2);
         
+        //glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        //glm::mat4 view = camera.GetViewMatrix();
+        volumeShader.setMat4("projection", projection);
+        volumeShader.setMat4("view", view);
+        //glm::mat4 model = glm::mat4(1.0f);
+        volumeShader.setMat4("model", model);
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        glDisable(GL_CULL_FACE);
+
         //backShader.use();
         //backShader.setMat4("projection", projection);
         //backShader.setMat4("view", view);

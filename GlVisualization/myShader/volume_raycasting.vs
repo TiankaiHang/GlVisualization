@@ -13,7 +13,7 @@ uniform mat4 projection;
 
 void main()
 {
-    EntryPoint = VerPos;
+    EntryPoint = VerClr;
     gl_Position = projection * view * vec4(vec3(model * vec4(VerPos, 1.0)), 1.0);
     ExitPointCoord = gl_Position;  
 }
