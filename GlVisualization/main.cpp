@@ -191,6 +191,7 @@ int VolumeRendering() {
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         glDisable(GL_CULL_FACE);
 
+        glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, width, height);
         volumeShader.use();
@@ -216,12 +217,15 @@ int VolumeRendering() {
         //glm::mat4 model = glm::mat4(1.0f);
         volumeShader.setMat4("model", model);
 
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         glDisable(GL_CULL_FACE);
-
+        glUseProgram(0);
         //backShader.use();
         //backShader.setMat4("projection", projection);
         //backShader.setMat4("view", view);

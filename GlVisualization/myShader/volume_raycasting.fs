@@ -41,7 +41,7 @@ void main()
     vec4 colorSample; // The src color 
     float alphaSample; // The src alpha
     // backgroundColor
-    vec4 bgColor = vec4(0.0, 1.0, 1.0, 0.0);
+    vec4 bgColor = vec4(1.0, 1.0, 1.0, 0.0);
  
     // FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
     for(int i = 0; i < 1600; i++)
@@ -79,7 +79,7 @@ void main()
     // FragColor = vec4(EntryPoint, 1.0); // have color
     // FragColor = vec4(vec3(colorSample), 1.0);
     // FragColor = vec4(ExitPointCoord); // have  color and color changes
-    // FragColor = vec4(exitPoint, 1.0f); //for debug, black
+    // FragColor = vec4(exitPoint, 1.0f); //for debug, have color now!~
     // FragColor = vec4(gl_FragCoord.xy/ScreenSize, 1.0f, 1.0f);
     // FragColor = vec4(-dir, 1.0f);
 };

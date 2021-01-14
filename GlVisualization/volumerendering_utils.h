@@ -406,7 +406,7 @@ void initFrameBuffer(GLuint texObj, GLuint texWidth, GLuint texHeight)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, texWidth, texHeight);
 
     // attach the texture and the depth buffer to the framebuffer
-    //glGenFramebuffers(1, &g_frameBuffer);
+    glGenFramebuffers(1, &g_frameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, g_frameBuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texObj, 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
