@@ -48,11 +48,11 @@ void main()
     {
     	// 获得体数据中的标量值scaler value
     	intensity =  texture(VolumeTex, voxelCoord).x;
-        //if(intensity <= 0)
-        //    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        //if(intensity < -0.0f){
+        //    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);}
     	// 查找传输函数中映射后的值
     	// 依赖性纹理读取  
-    	colorSample = texture(TransferFunc, intensity) * 1.0f / 200.0f;
+    	colorSample = texture(TransferFunc, intensity) * 256.0f / 200.0f;
     	// modulate the value of colorSample.a
     	// front-to-back integration
     	if (colorSample.a > 0.0) {
@@ -82,4 +82,5 @@ void main()
     // FragColor = vec4(exitPoint, 1.0f); //for debug, have color now!~
     // FragColor = vec4(gl_FragCoord.xy/ScreenSize, 1.0f, 1.0f);
     // FragColor = vec4(-dir, 1.0f);
+    // FragColor = vec4(intensity, intensity, intensity, intensity);
 };

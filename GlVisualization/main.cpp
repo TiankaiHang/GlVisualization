@@ -179,10 +179,17 @@ int VolumeRendering() {
         //volumeShader.setVec3("viewPos", camera.Position);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
+        //glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        //glm::mat4 model = glm::mat4(1.0f);
+        //glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),
+        //    glm::vec3(0.0f, 0.0f, 0.0f),
+        //    glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        //model = glm::translate(model, glm::vec3(-0.5f, -0.5f, -0.5f));
         backShader.setMat4("projection", projection);
         backShader.setMat4("view", view);
-        glm::mat4 model = glm::mat4(1.0f);
         backShader.setMat4("model", model);
 
         glEnable(GL_CULL_FACE);

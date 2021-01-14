@@ -391,7 +391,7 @@ GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
     // pixel transfer happens here from client to OpenGL server
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     // glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RED, w, h, d, 0, GL_RED, GL_UNSIGNED_BYTE, data);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R16F, w, h, d, 0, GL_RED, GL_UNSIGNED_BYTE, data);
     delete[]data;
     cout << "volume texture created" << endl;
     return g_volTexObj;
