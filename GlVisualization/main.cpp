@@ -118,10 +118,11 @@ int VolumeRendering() {
     //texture
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
+    // cout << "===== " << width << " " << height << endl;
     GLuint g_tffTexObj = initTFF1DTex("used_data/tff.dat");
     GLuint g_bfTexObj = initFace2DTex(width, height);
     GLuint g_volTexObj = initVol3DTex("used_data/head256.raw", 256, 256, 225);
-    //initFrameBuffer(g_bfTexObj, width, height);
+    initFrameBuffer(g_bfTexObj, width, height);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
 
     //Volume myVolume;
@@ -165,8 +166,6 @@ int VolumeRendering() {
         glViewport(0, 0, width, height);
 
         backShader.use();
-
-
 
         // render
         // ------

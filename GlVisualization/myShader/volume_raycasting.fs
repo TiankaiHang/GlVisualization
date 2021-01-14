@@ -10,7 +10,7 @@ in vec4 ExitPointCoord;
 uniform sampler2D ExitPoints;
 uniform sampler3D VolumeTex;
 uniform sampler1D TransferFunc;  
-uniform float     StepSize = 0.01f;
+uniform float     StepSize = 0.001f;
 uniform vec2      ScreenSize;
 layout (location = 0) out vec4 FragColor;
 

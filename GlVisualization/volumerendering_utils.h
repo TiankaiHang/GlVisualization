@@ -391,7 +391,7 @@ GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
     // pixel transfer happens here from client to OpenGL server
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     // glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, w, h, d, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RED, w, h, d, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
     delete[]data;
     cout << "volume texture created" << endl;
     return g_volTexObj;
@@ -406,7 +406,7 @@ void initFrameBuffer(GLuint texObj, GLuint texWidth, GLuint texHeight)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, texWidth, texHeight);
 
     // attach the texture and the depth buffer to the framebuffer
-    glGenFramebuffers(1, &g_frameBuffer);
+    //glGenFramebuffers(1, &g_frameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, g_frameBuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texObj, 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
