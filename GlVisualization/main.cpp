@@ -121,7 +121,8 @@ int VolumeRendering() {
     // cout << "===== " << width << " " << height << endl;
     GLuint g_tffTexObj = initTFF1DTex("used_data/tff.dat");
     GLuint g_bfTexObj = initFace2DTex(width, height);
-    GLuint g_volTexObj = initVol3DTex("used_data/head256.raw", 256, 256, 225);
+    // GLuint g_volTexObj = initVol3DTex("used_data/head256.raw", 256, 256, 225);
+    GLuint g_volTexObj = initVol3DTexFromGeneratedData();
     initFrameBuffer(g_bfTexObj, width, height);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
 

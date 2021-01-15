@@ -67,6 +67,7 @@ void generateCubic_for_vr(vector<float>& Vertices, vector<int>& Indices);
 GLuint initTFF1DTex(const char* filename);
 GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight);
 GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d);
+GLuint initVol3DTexFromGeneratedData();
 
 void initFrameBuffer(GLuint, GLuint, GLuint);
 void checkFramebufferStatus();
@@ -331,6 +332,11 @@ GLuint initTFF1DTex(const char* filename)
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA8, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, tff);
+
+    // print tff
+    //for (int i = 0; i < MAX_CNT; ++i) {
+    //    cout << (int)tff[i] << " ";
+    //}
     free(tff);
     return tff1DTex;
 }
@@ -393,6 +399,28 @@ GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
     // glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
     glTexImage3D(GL_TEXTURE_3D, 0, GL_R16F, w, h, d, 0, GL_RED, GL_UNSIGNED_BYTE, data);
     delete[]data;
+    cout << "volume texture created" << endl;
+    return g_volTexObj;
+}
+
+GLuint initVol3DTexFromGeneratedData() {
+    Volume<GLubyte> myvolume;
+    vector<GLubyte> data = myvolume.getData();
+    glm::vec3 voxsize = myvolume.getVoxelSize();
+    GLuint g_volTexObj;
+    glGenTextures(1, &g_volTexObj);
+    // bind 3D texture target
+    glBindTexture(GL_TEXTURE_3D, g_volTexObj);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    // pixel transfer happens here from client to OpenGL server
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R16F, voxsize.x, voxsize.y, voxsize.z, 0, GL_RED, GL_UNSIGNED_BYTE, &data[0]);
+    data.clear();
     cout << "volume texture created" << endl;
     return g_volTexObj;
 }
