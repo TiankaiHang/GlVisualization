@@ -142,20 +142,21 @@ int main()
     while (!glfwWindowShouldClose(window)) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ball_lightning_shader.use();
         //glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
+        //glBindVertexArray(VAO);
 
-        glm::vec3 viewPos(-1.0f, 1.0f, 3.0f);
-        glm::vec3 lightPos(0.0f, 0.0f, 2.0f);
-        glm::mat4 projection = glm::perspective(60.0f / 180.0f * PI, (GLfloat)SR_WIDTH / SR_HEIGHT, 0.1f, 400.f);
-        glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),
+        glm::vec3 viewPos(0.0f, 0.0f, 3.0f);
+        glm::vec3 lightPos(-1.0f, 0.0f, 2.0f);
+        glm::mat4 projection = glm::perspective(60.0f / 180.0f * PI, (GLfloat)SR_WIDTH / SR_HEIGHT, 0.1f, 10.0f);
+        glm::mat4 view = glm::lookAt(glm::vec3(-1.0f, 1.0f, 3.0f),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 0.0f));
         glm::mat4 model = glm::mat4(1.0f);
+        // glm::mat4 view = glm::mat4(1.0f);
         glm::vec3 lightColor(1.0, 1.0, 1.0);
         glm::vec3 objectColor(0.4, 0.6, 0.3);
 
@@ -167,10 +168,11 @@ int main()
         ball_lightning_shader.setVec3("lightColor", lightColor);
         ball_lightning_shader.setVec3("objectColor", objectColor);
 
-        //glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         //glCullFace(GL_BACK);
+        glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         glfwSwapBuffers(window);
         glfwPollEvents();
