@@ -102,6 +102,45 @@ def generateCylinderData(radius=0.5, height=1.6, \
 
     return end_points
 
+def generateBallData(radius=1.0, intervals=50):
+    delta_angle = 2.0 * np.pi / intervals
+    vertices = []
+    inds = []
+
+    for i in range(intervals + 1):
+        for j in range(intervals + 1):
+            theta = i * 1.0 * delta_angle
+            alpha = j * 1.0 * delta_angle
+
+            x = radius * np.cos(alpha) * np.cos(theta)
+            y = radius * np.cos(alpha) * np.sin(theta)
+            z = radius * np.sin(alpha)
+
+            # normal vector
+            nx = x / radius
+            ny = y / radius
+            nz = z / radius
+
+            vertices.append([x, y, z, nx, ny, nz])
+
+            if i != intervals and j != intervals:
+                inds.append([
+                    i * (intervals + 1) + j,
+                    (i + 1) * (intervals + 1) + j,
+                    (i + 1) * (intervals + 1) + j + 1,
+                    i * (intervals + 1) + j,
+                    (i + 1) * (intervals + 1) + j + 1,
+                    i * (intervals + 1) + j + 1,
+                ])
+    vertices = np.vstack(vertices)
+    inds = np.vstack(inds)
+
+    print(vertices.shape, inds.shape)
+
+    np.savetxt(fname="ball_inds.txt", X=inds.reshape(-1), delimiter=',', fmt='%8d')
+    np.savetxt(fname="ball_vertices.txt", X=vertices, delimiter=',', fmt='%.6f')
+
+
 def rotate_raw_data(theta1, theta2, theta3):
     rotate_mat = getRotateMat(theta1, theta2, theta3)
     end_points = generateCylinderData()
@@ -118,15 +157,17 @@ def rotate_raw_data(theta1, theta2, theta3):
 
 if __name__ == '__main__':
 
-    theta = [45, 45, 45]
-    rotate_mat = getRotateMat(*theta)
-    end_points = rotate_raw_data(*theta)
+    # theta = [45, 45, 45]
+    # rotate_mat = getRotateMat(*theta)
+    # end_points = rotate_raw_data(*theta)
 
-    # print(end_points['front_circle_np'].shape, end_points['behind_circle_np'].shape, end_points['side_face_np'].shape)
-    X = np.concatenate((end_points['front_circle_np'], end_points['behind_circle_np'], end_points['side_face_np']), axis=0)
-    print(X.shape)
-    np.savetxt(fname="vertices.txt", X=X, delimiter=',', fmt='%.6f')
-    # print(end_points['front_circle_inds_up'].shape, end_points['behind_circle_inds_np'].shape, end_points['side_face_inds_np'].shape)
-    INDS = np.concatenate((end_points['front_circle_inds_up'], end_points['behind_circle_inds_np'], end_points['side_face_inds_np']), axis=0).astype(np.int32)
-    print(INDS.shape)
-    np.savetxt(fname="inds.txt", X=INDS, delimiter=',', fmt='%8d')
+    # # print(end_points['front_circle_np'].shape, end_points['behind_circle_np'].shape, end_points['side_face_np'].shape)
+    # X = np.concatenate((end_points['front_circle_np'], end_points['behind_circle_np'], end_points['side_face_np']), axis=0)
+    # print(X.shape)
+    # np.savetxt(fname="vertices.txt", X=X, delimiter=',', fmt='%.6f')
+    # # print(end_points['front_circle_inds_up'].shape, end_points['behind_circle_inds_np'].shape, end_points['side_face_inds_np'].shape)
+    # INDS = np.concatenate((end_points['front_circle_inds_up'], end_points['behind_circle_inds_np'], end_points['side_face_inds_np']), axis=0).astype(np.int32)
+    # print(INDS.shape)
+    # np.savetxt(fname="inds.txt", X=INDS, delimiter=',', fmt='%8d')
+
+    generateBallData(radius=0.8)

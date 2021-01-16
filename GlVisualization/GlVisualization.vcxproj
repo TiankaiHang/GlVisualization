@@ -148,7 +148,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main_for_mu.cpp" />
+    <ClCompile Include="main_for_mu_ball.cpp" />
     <ClCompile Include="volume.cpp" />
   </ItemGroup>
   <ItemGroup>

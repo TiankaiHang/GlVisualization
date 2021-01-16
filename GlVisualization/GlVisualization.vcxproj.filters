@@ -19,10 +19,10 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="glad.c" />
-    <ClCompile Include="main_for_mu.cpp">
+    <ClCompile Include="volume.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="volume.cpp">
+    <ClCompile Include="main_for_mu_ball.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
