@@ -170,4 +170,4 @@ if __name__ == '__main__':
     # print(INDS.shape)
     # np.savetxt(fname="inds.txt", X=INDS, delimiter=',', fmt='%8d')
 
-    generateBallData(radius=1.0)
+    generateBallData(radius=1.2)
