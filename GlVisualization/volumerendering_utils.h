@@ -107,7 +107,7 @@ void processInput(GLFWwindow* window)
 
     // SPACE to save image
     bool tosave = true;
-    string img_pth = "figs/volume_rendering_";
+    string img_pth = "figs/volume_rendering_head_";
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && tosave) {
         img_pth = img_pth + to_string(count_image) + ".png";
         saveImage(img_pth.c_str(), window);
