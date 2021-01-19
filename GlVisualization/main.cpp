@@ -11,14 +11,14 @@
 // ====================================================================
 //               \\       main function       //
 // ====================================================================
-//int main()
-//{
-//    // int flag = draw_shape(DRAW_SPHERE);
-//    int flag = draw_shape(DRAW_CUBIC);
-//    // int flag = VolumeRendering(HEAD_RENDERING);
-//    // int flag = VolumeRendering(GEN_RENDERING);
-//    return flag;
-//}
+int main()
+{
+    // int flag = draw_shape(DRAW_SPHERE);
+    // int flag = draw_shape(DRAW_CUBIC);
+    // int flag = VolumeRendering(HEAD_RENDERING);
+    int flag = VolumeRendering(GEN_RENDERING);
+    return flag;
+}
 // ====================================================================
 // ====================================================================
 

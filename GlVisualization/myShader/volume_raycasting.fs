@@ -52,7 +52,7 @@ void main()
         //    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);}
     	// 查找传输函数中映射后的值
     	// 依赖性纹理读取  
-    	colorSample = texture(TransferFunc, intensity) * 256.0f / 200.0f;
+    	colorSample = texture(TransferFunc, intensity) * 400.0f / 200.0f;
     	// modulate the value of colorSample.a
     	// front-to-back integration
     	if (colorSample.a > 0.0) {

@@ -150,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_for_mu_ball.cpp" />
     <ClCompile Include="main_for_mu_cubic.cpp" />
+    <ClCompile Include="main_for_mu_volume.cpp" />
     <ClCompile Include="volume.cpp" />
   </ItemGroup>
   <ItemGroup>

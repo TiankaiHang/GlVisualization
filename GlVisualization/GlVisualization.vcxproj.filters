@@ -28,6 +28,9 @@
     <ClCompile Include="main_for_mu_cubic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="main_for_mu_volume.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image_write.h">
