@@ -16,26 +16,19 @@ layout (location = 0) out vec4 FragColor;
 
 void main()
 {
-    // ExitPointCoord 的坐标是设备规范化坐标
-    // 出现了和纹理坐标有关的问题。
+
     vec3 exitPoint = texture(ExitPoints, gl_FragCoord.xy/ScreenSize).xyz;
-    // that will actually give you clip-space coordinates rather than
-    // normalised device coordinates, since you're not performing the perspective
-    // division which happens during the rasterisation process (between the vertex
-    // shader and fragment shader
-    // vec2 exitFragCoord = (ExitPointCoord.xy / ExitPointCoord.w + 1.0)/2.0;
-    // vec3 exitPoint  = texture(ExitPoints, exitFragCoord).xyz;
     if (EntryPoint == exitPoint)
     	//background need no raycasting
     	discard;
     vec3 dir = exitPoint - EntryPoint;
-    float len = length(dir); // the length from front to back is calculated and used to terminate the ray
+    float len = length(dir); 
     vec3 deltaDir = normalize(dir) * StepSize;
     float deltaDirLen = length(deltaDir);
     vec3 voxelCoord = EntryPoint;
-    vec4 colorAcum = vec4(0.0); // The dest color
-    float alphaAcum = 0.0;                // The  dest alpha for blending
-    // 定义颜色查找的坐标
+    vec4 colorAcum = vec4(0.0); 
+    float alphaAcum = 0.0; 
+
     float intensity;
     float lengthAcum = 0.0;
     vec4 colorSample; // The src color 
@@ -46,13 +39,10 @@ void main()
     // FragColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
     for(int i = 0; i < 1600; i++)
     {
-    	// 获得体数据中的标量值scaler value
     	intensity =  texture(VolumeTex, voxelCoord).x;
         //if(intensity < -0.0f){
         //    FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);}
-    	// 查找传输函数中映射后的值
-    	// 依赖性纹理读取  
-    	colorSample = texture(TransferFunc, intensity) * 400.0f / 200.0f;
+    	colorSample = texture(TransferFunc, intensity) * 256.0f / 200.0f;
     	// modulate the value of colorSample.a
     	// front-to-back integration
     	if (colorSample.a > 0.0) {

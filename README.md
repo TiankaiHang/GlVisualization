@@ -66,13 +66,7 @@ float ROTATE_ANGLE = 60.0 * PI / 180.0;
 vector<float> OFFSET = { 0.0, 0.0, 0.0 };
 ```
 
-<img width=240 height=240 src="GlVisualization/figs/cylinder_norm111.png" style="zoom:20%"/>
-
-with different colors illustrating
-
-<img width=240 height=240 src="GlVisualization/figs/cylinder_norm111_diff_color.png" style="zoom:20%"/>
-
-<img width=240 height=240 src="GlVisualization/figs/cylinder_norm111_diff_color_ploygon.png" style="zoom:20%"/>
+<img width=240 height=240 src="GlVisualization/figs/cylinder_norm111.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/cylinder_norm111_diff_color.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/cylinder_norm111_diff_color_ploygon.png" style="zoom:20%"/>
 
 ## 具体实验内容
 

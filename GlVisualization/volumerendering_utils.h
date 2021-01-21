@@ -107,7 +107,7 @@ void processInput(GLFWwindow* window)
 
     // SPACE to save image
     bool tosave = true;
-    string img_pth = "figs/cubic-a01-s05-";
+    string img_pth = "figs/vr-head256-";
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && tosave) {
         img_pth = img_pth + to_string(count_image) + ".png";
         saveImage(img_pth.c_str(), window);
