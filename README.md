@@ -13,23 +13,23 @@ GLAD: https://glad.dav1d.de/
 ### Experiment-1
 
 本实验视见变换与光照模型
-<img width=240 height=240 src="GlVisualization/figs/sphere_lightning_0.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/sphere_lightning_1.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/sphere_lightning_2.png" style="zoom:20%"/>
+<img width=240 height=180 src="GlVisualization/figs/sphere_lightning_0.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/sphere_lightning_1.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/sphere_lightning_2.png" style="zoom:20%"/>
 
-<img width=240 height=240 src="GlVisualization/figs/cubic-a01-s05-0.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/cubic-a01-s05-1.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/cubic-a01-s05-2.png" style="zoom:20%"/>
+<img width=240 height=180 src="GlVisualization/figs/cubic-a01-s05-0.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/cubic-a01-s05-1.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/cubic-a01-s05-2.png" style="zoom:20%"/>
 
 ### Experiment-2
 
 体绘制
 
-<img width=240 height=240 src="GlVisualization/figs/vr-gen-0.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/vr-gen-1.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/vr-gen-2.png" style="zoom:20%"/>
+<img width=240 height=180 src="GlVisualization/figs/vr-gen-0.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/vr-gen-1.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/vr-gen-2.png" style="zoom:20%"/>
 
 
 
-<img width=240 height=240 src="GlVisualization/figs/volume_rendering_head_0.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/volume_rendering_head_1.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/volume_rendering_head_2.png" style="zoom:20%"/>
+<img width=240 height=180 src="GlVisualization/figs/volume_rendering_head_0.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/volume_rendering_head_1.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/volume_rendering_head_2.png" style="zoom:20%"/>
 
 #### ball
 
-<img width=240 height=240 src="GlVisualization/figs/ball.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/ball1.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/ball2.png" style="zoom:20%"/>
+<img width=240 height=180 src="GlVisualization/figs/ball.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/ball1.png" style="zoom:20%"/><img width=240 height=180 src="GlVisualization/figs/ball2.png" style="zoom:20%"/>
 从左往右：500*500 vertices，500*500 vertices，50*50 vertices。
 #### Cylinder
 
