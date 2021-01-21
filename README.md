@@ -76,6 +76,38 @@ vector<float> OFFSET = { 0.0, 0.0, 0.0 };
 
 <img width=240 height=240 src="GlVisualization/figs/cylinder_norm111.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/cylinder_norm111_diff_color.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/cylinder_norm111_diff_color_ploygon.png" style="zoom:20%"/>
 
+## 代码说明
+
+本次实验部分代码参考自：https://github.com/toolchainX/Volume_Rendering_Using_GLSL.git
+
+主要绘制函数如下所示
+
+```c
+int draw_shape(int shape_flag);
+int VolumeRendering(int volume_choice);
+```
+
+在main函数中调用
+```c
+#include "volumerendering_utils.h"
+
+int main()
+{
+    // int flag = draw_shape(DRAW_SPHERE);
+    // int flag = draw_shape(DRAW_CUBIC);
+    // int flag = VolumeRendering(HEAD_RENDERING);
+    int flag = VolumeRendering(GEN_RENDERING);
+    return flag;
+}
+```
+
+主要使用的几个类包括
+```
+shader: 用于加载GLSL着色语言段
+camera: 用于通过鼠标键盘得到相应的视见变换，进行显示
+volume: 产生体素数据（球、圆柱构成的体素数据）
+```
+
 ## 具体实验内容
 
 ### 实验1
