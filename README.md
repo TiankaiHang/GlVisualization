@@ -31,6 +31,7 @@ GLAD: https://glad.dav1d.de/
 #### ball
 
 <img width=240 height=240 src="GlVisualization/figs/ball.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/ball1.png" style="zoom:20%"/><img width=240 height=240 src="GlVisualization/figs/ball2.png" style="zoom:20%"/>
+
 从左往右：500*500 vertices，500*500 vertices，50*50 vertices。
 #### Cylinder
 
